@@ -72,6 +72,7 @@ comum = sorted(set(publicadoras_filtro), key=publicadoras_filtro.count, reverse=
 
 # ----------------------------------------------------------------------------------
 # Dados 2
+
 generos = []
 
 for linha in df_array:
