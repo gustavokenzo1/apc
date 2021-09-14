@@ -70,19 +70,29 @@ for i in range(len(publicadoras)):
 # O set() filtra todos os repetidos, o key serve para o sorted saber com o que se deve ordernar, e o reversed é para ficar em ordem crescente
 comum = sorted(set(publicadoras_filtro), key=publicadoras_filtro.count, reverse=True)
 
+# ----------------------------------------------------------------------------------
+# Dados 2
 
+generos = []
+
+for linha in df_array:
+    generos.append(linha[4])
+
+# Gêneros mais populares
+
+# Sports
+# Racing
+# Role-Playing
+# Puzzle
+# Misc
+# Shooter
+# Simulation
+# Action
+
+# ----------------------------------------------------------------------------------
+
+# n deu certo ainda
 plataforma = []
-
-ps3 = 0
-ps4 = 0
-computador = 0
-Nes = 0
-ps2 = 0
-x360 = 0
-n64 = 0
-xone = 0
-psp = 0
-gb = 0 
 
 for linha in df_array:
     try:
@@ -115,7 +125,7 @@ PLOTLY E DASH
 
 # Quando for testar no Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
-app = dash.Dash(__name__)
+""" app = dash.Dash(__name__)
 
 fig1 = make_subplots(
     rows=1, cols=1,
@@ -134,23 +144,11 @@ fig1.add_trace(
     row=1, col=1
 )
 
-data = dict(
-    empresas =['Sony','Microsoft','PC','Nintendo','Atari','SNK','','','','','','',''],
-    consoles =['PlayStation3','Computador','PlayStation4','NES','PlayStation2','Xbox360','Nintendo64','XboxOne','PlayStationPortable','GameBoy','Atari2600','NintendoWii','NeoGeo'],
-    vendas=[ps3,computador,ps4,nes,ps2,x360,n64,xone,psp,gb,atari,wii,ng]) 
-
-fig5 =px.sunburst(
-    data,
-    names='empresas',
-    parents='consoles',
-    values='vendas',
-)
-
 # Estilizar o Dash
 app.layout = html.Div([
     html.H1("Teste"),
     html.Br(),
-    dcc.Graph(figure = fig5)
+    dcc.Graph(figure = fig1)
 ])
 # Rodar o Dash
-app.run_server(use_reloader = False, debug = True) 
+app.run_server(use_reloader = False, debug = True)  """
