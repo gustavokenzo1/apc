@@ -1,9 +1,12 @@
 from pandas import read_csv
-from math import isnan
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # Gráfico 1: Vendas de qualquer jogo a cada ano - Table and Chart Subplots
 # Gráfico 2: Vendas por gêneros - Figure Factory Subplots
@@ -67,33 +70,87 @@ for i in range(len(publicadoras)):
 # O set() filtra todos os repetidos, o key serve para o sorted saber com o que se deve ordernar, e o reversed é para ficar em ordem crescente
 comum = sorted(set(publicadoras_filtro), key=publicadoras_filtro.count, reverse=True)
 
-'''
 
+plataforma = []
+
+ps3 = 0
+ps4 = 0
+computador = 0
+Nes = 0
+ps2 = 0
+x360 = 0
+n64 = 0
+xone = 0
+psp = 0
+gb = 0 
+
+for linha in df_array:
+    try:
+        plataforma.append(linha[2].upper())
+    except:
+        continue
+    
+ps3 = plataforma.count('PS3')
+computador = plataforma.count('PC')
+ps4 = plataforma.count('PS4')
+nes = plataforma.count('NES')
+ps2 = plataforma.count('PS2')
+x360 = plataforma.count('X360')
+n64 = plataforma.count('N64')
+xone = plataforma.count('XONE')
+psp = plataforma.count('PSP')
+gb = plataforma.count('GB')
+atari = plataforma.count('2600')
+wii = plataforma.count('WII')
+ng = plataforma.count('NG')
+
+'''
 ↑↑↑
 MANIPULAÇÕES DA BASE DE DADOS
-
 -------------------------------------------------------------------------------
-
 PLOTLY E DASH 
 ↓↓↓
-
 '''
 
-"""
-Quando for testar no Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
- # Criar o gráfico 
-fig = px.line(x=todos, y=anos_filtro, title="Gráfico")
 
+# Quando for testar no Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
 app = dash.Dash(__name__)
 
+fig1 = make_subplots(
+    rows=1, cols=1,
+    shared_xaxes=True,
+    vertical_spacing=0.03,
+    specs=[[{"type": "scatter"}]]
+)
+
+fig1.add_trace(
+    go.Scatter(
+        x=todos,
+        y=anos_filtro,
+        mode="lines",
+        name="vendas anuais"
+    ),
+    row=1, col=1
+)
+
+data = dict(
+    empresas =['Sony','Microsoft','PC','Nintendo','Atari','SNK','','','','','','',''],
+    consoles =['PlayStation3','Computador','PlayStation4','NES','PlayStation2','Xbox360','Nintendo64','XboxOne','PlayStationPortable','GameBoy','Atari2600','NintendoWii','NeoGeo'],
+    vendas=[ps3,computador,ps4,nes,ps2,x360,n64,xone,psp,gb,atari,wii,ng]) 
+
+fig5 =px.sunburst(
+    data,
+    names='empresas',
+    parents='consoles',
+    values='vendas',
+)
+
 # Estilizar o Dash
 app.layout = html.Div([
-    html.H1("Vendas a cada ano"),
+    html.H1("Teste"),
     html.Br(),
-    dcc.Graph(figure = fig)
+    dcc.Graph(figure = fig5)
 ])
-
 # Rodar o Dash
 app.run_server(use_reloader = False, debug = True) 
-"""
