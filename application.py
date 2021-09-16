@@ -6,13 +6,14 @@ import dash_html_components as html
 
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+from plotly.subplots import make_subplots # Gráfico 1
+import plotly.figure_factory as ff # Gráfico 2
 
-# Gráfico 1: Vendas de qualquer jogo a cada ano - Table and Chart Subplots
-# Gráfico 2: Vendas por gêneros - Figure Factory Subplots
-# Gráfico 3: Vendas por região - Bubble Maps
-# Gráfico 4: Vendas por publicadora ao longo dos anos - Line Charts
-# Gráfico 5: Vendas por plataforma - Sunburst
+# [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Table and Chart Subplots
+# [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
+# [] Gráfico 3: Vendas por região - Bubble Maps
+# [] Gráfico 4: Vendas por publicadora ao longo dos anos - Line Charts
+# [X] Gráfico 5: Vendas por plataforma - Sunburst
 
 # Dados começam em 1980 e terminam em 2020
 
@@ -20,6 +21,9 @@ from plotly.subplots import make_subplots
 df = read_csv("vgsales.csv")
 # Pegar cada jogo e transformar todos os seus dados em um item de uma lista chamada df_array
 df_array = df.values
+
+# ----------------------------------------------------------------------------------
+# Dados 1
 
 # Criar array para guardar todos os anos
 anos = []
@@ -39,7 +43,7 @@ anos.sort()
 total_ano = 0
 # Criar array em que cada item vai ser quantos jogos foram lançados em cada ano
 anos_filtro = []
-
+# Todos é uma array para guardar todos os anos analisados
 todos = []
 
 # Loop de 1980 a 2020
@@ -49,6 +53,8 @@ for i in range(1980, 2021):
     # Guardar na lista
     anos_filtro.append(total_ano)
     todos.append(i)
+
+# ----------------------------------------------------------------------------------
 
 # Mesma lógica dos anos
 publicadoras = []
@@ -74,23 +80,59 @@ comum = sorted(set(publicadoras_filtro), key=publicadoras_filtro.count, reverse=
 # Dados 2
 
 generos = []
+todos_generos= ['Sports', 'Racing', 'Role-Playing', 'Puzzle', 'Misc', 'Shooter', 'Simulation', 'Action']
+# Gêneros mais populares:
+# Sports, Racing, Role-Playing, Puzzle, Misc, Shooter, Simulation, Action
+
+sports = 0
+racing = 0
+rpg = 0
+puzzle = 0
+misc = 0
+fps = 0
+sim = 0
+action = 0
 
 for linha in df_array:
-    generos.append(linha[4])
+    if linha[4] == 'Sports':
+        sports += int(linha[10])
+    if linha[4] == 'Racing':
+        racing += int(linha[10])
+    if linha[4] == 'Role-Playing':
+        rpg += int(linha[10])
+    if linha[4] == 'Puzzle':
+        puzzle += int(linha[10])
+    if linha[4] == 'Misc':
+        misc += int(linha[10])
+    if linha[4] == 'Shooter':
+        fps += int(linha[10])
+    if linha[4] == 'Simulation':
+        sim += int(linha[10])
+    if linha[4] == 'Action':
+        action += int(linha[10])
 
-# Gêneros mais populares
+generos.append(sports)
+generos.append(racing)
+generos.append(rpg)
+generos.append(puzzle)
+generos.append(misc)
+generos.append(fps)
+generos.append(sim)
+generos.append(action)
 
-# Sports
-# Racing
-# Role-Playing
-# Puzzle
-# Misc
-# Shooter
-# Simulation
-# Action
+tabela = [['Gênero', 'Vendas'],
+            ['Esportes', sports],
+            ['Corrida', racing],
+            ['RPG', rpg],
+            ['Puzzle', puzzle],
+            ['Diversos',misc],
+            ['Tiro', fps],
+            ['Simulação', sim],
+            ['Ação', action]]
 
 # ----------------------------------------------------------------------------------
 
+# Dados 5
 # n deu certo ainda
 plataforma = []
 
@@ -114,6 +156,20 @@ atari = plataforma.count('2600')
 wii = plataforma.count('WII')
 ng = plataforma.count('NG')
 
+snk = ng
+nintendo = nes + n64 + gb + wii
+microsoft = x360 + xone 
+sony = ps3 + ps4 + ps2 + psp
+plataforma = sony + microsoft + computador + nintendo + atari + snk
+
+data = dict (
+    empresas = ['plataforma', 'Sony', 'Microsoft', 'PC', 'Nintendo', 'Atari', 'SNK', 'PlayStation3', 'Computador', 'PlayStation4', 'NES', 'PlayStation2', 'Xbox360', 'Nintendo64', 'XboxOne', 'PlayStationPortable', 'GameBoy', 'Atari2600', 'NintendoWii' , 'NeoGeo'],
+    consoles = ['', 'plataforma', 'plataforma','plataforma','plataforma','plataforma','plataforma', 'Sony', 'PC', 'Sony', 'Nintendo', 'Sony', 'Microsoft', 'Nintendo', 'Microsoft', 'Sony', 'Nintendo', 'Atari', 'Nintendo', 'SNK' ],
+    vendas = [plataforma, sony, microsoft, computador, nintendo, atari, snk, ps3, computador, ps4, nes, ps2, x360, n64, xone, psp, gb, atari, wii, ng]) 
+
+
+# ----------------------------------------------------------------------------------
+
 '''
 ↑↑↑
 MANIPULAÇÕES DA BASE DE DADOS
@@ -125,15 +181,13 @@ PLOTLY E DASH
 
 # Quando for testar no Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
-""" app = dash.Dash(__name__)
-
+app = dash.Dash(__name__)
 fig1 = make_subplots(
     rows=1, cols=1,
     shared_xaxes=True,
     vertical_spacing=0.03,
     specs=[[{"type": "scatter"}]]
 )
-
 fig1.add_trace(
     go.Scatter(
         x=todos,
@@ -144,11 +198,56 @@ fig1.add_trace(
     row=1, col=1
 )
 
+fig2 = ff.create_table(tabela, height_constant=50)
+
+trace_fig2 = go.Scatter(x=todos_generos, y=generos, xaxis='x2', yaxis='y2',
+                        marker=dict(color='#9400d3'),
+                        name='Vendas Globais')
+
+fig2.add_trace(trace_fig2)
+
+fig2['layout']['xaxis2'] = {}
+fig2['layout']['yaxis2'] = {}
+fig2.layout.xaxis.update({'domain': [0, .5]})
+fig2.layout.xaxis2.update({'domain': [.6, 1]})
+fig2.layout.yaxis2.update({'anchor': 'x2'})
+fig2.layout.yaxis2.update({'title': 'Vendas'})
+fig2.layout.margin.update({'t':75, 'l':50, 'r': 70})
+
+fig2.update_layout(
+    title='Vendas por gêneros',
+    height=800,
+    font=dict(
+        family="Press Start 2P",
+        size=15,
+        color="RebeccaPurple"
+    )
+)
+
+fig5 = px.sunburst(
+    data,
+    names='empresas',
+    parents='consoles',
+    values='vendas',
+    color='empresas', hover_data=['empresas'],
+    color_continuous_scale='Inferno',
+    
+)
+fig5.layout.update({'height':800})
+
 # Estilizar o Dash
 app.layout = html.Div([
     html.H1("Teste"),
+
     html.Br(),
-    dcc.Graph(figure = fig1)
+    dcc.Graph(figure = fig1),
+
+    html.Br(),
+    dcc.Graph(figure = fig2),
+
+    html.Br(),
+    dcc.Graph(figure = fig5)
 ])
 # Rodar o Dash
-app.run_server(use_reloader = False, debug = True)  """
+if __name__ == "__main__":
+    app.run_server(debug=True)
