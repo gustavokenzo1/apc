@@ -3,13 +3,13 @@ from pandas import read_csv
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 
 import plotly.express as px
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots # Gráfico 1
 import plotly.figure_factory as ff # Gráfico 2
 
-# [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Table and Chart Subplots
+# [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Bar Charts
 # [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
 # [] Gráfico 3: Vendas por região - Bubble Maps
 # [] Gráfico 4: Vendas por publicadora ao longo dos anos - Line Charts
@@ -136,6 +136,38 @@ tabela = [['Gênero', 'Vendas'],
             ['Ação', action]]
 
 # ----------------------------------------------------------------------------------
+# Dados 3
+
+# North America, European Union, Japan
+lat = [44.76, 50.03, 37.36]
+long = [-99.53, 10.14, 139.34]
+vendas_na = 0
+vendas_eu = 0
+vendas_jp = 0
+
+# 1763 NA
+# 837 EU
+# 406 JP
+
+for linha in df_array:
+    vendas_na += int(linha[6])
+    vendas_eu += int(linha[7])
+    vendas_jp += int(linha[8])
+
+# ----------------------------------------------------------------------------------
+# Dados 4
+# 5 Publicadoras que mais publicaram e não fabricam consoles
+publicadoras_apenas = ['Electronic Arts', 'Activision', 'Namco Bandai Games', 'Ubisoft', 'Konami Digital Entertainment']
+
+# 1980, 1990, 2000, 2010
+ea = []
+act = []
+namco = []
+bugsoft = []
+konami = []
+
+
+# ----------------------------------------------------------------------------------
 
 # Dados 5
 plataforma = []
@@ -195,28 +227,16 @@ PLOTLY E DASH
 
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
 
 # Criar os gráficos
 
 # ========================================== Gráfico 1 =============================================
-# make_subplots foi importado lá em cima
-fig1 = make_subplots(
-    rows=1, cols=1,
-    shared_xaxes=True,
-    vertical_spacing=0.03,
-    specs=[[{"type": "scatter"}]]
+fig1 = px.bar(x=todos, y=anos_filtro)
 
-# Adicionar o traço, ou, a linha do gráfico de fato
-)
-fig1.add_trace(
-    go.Scatter(
-        x=todos,
-        y=anos_filtro,
-        mode="lines",
-        name="vendas anuais"
-    ),
-    row=1, col=1
+fig1.update_layout(
+    title='Vendas por ano',
+    template='plotly_dark'
 )
 
 # ========================================== Gráfico 2 =============================================
@@ -244,8 +264,41 @@ fig2.update_layout(
         family="Press Start 2P",
         size=15,
         color="RebeccaPurple"
-    )
+    ),
+    template='plotly_dark'
 )
+
+# ========================================== Gráfico 3 =============================================
+fig3 = go.Figure()
+
+limits = [(400, 600), (700, 900), (1500, 2000)]
+cores = ["royalblue","crimson","lightseagreen"]
+
+for i in range(len(limits)):
+    lim = limits[i]
+
+    fig3.add_trace(go.Scattergeo(
+                    lon = long,
+                    lat = lat,
+                    marker = dict(
+                        size = vendas_na,
+                        color = cores[i],
+                        line_color = 'rgb(40,40,40)',
+                        line_width = 0.5,
+                        sizemode = 'area'
+                    ),
+                    name = '{0} - {1}'.format(lim[0],lim[1])
+    ))
+
+fig3.update_layout(
+    title_text = 'Vendas por região',
+    showlegend = True,
+    geo = dict(
+        landcolor = 'rgb(217, 217, 217)'
+    ),
+    template='plotly_dark'
+)
+
 
 # ========================================== Gráfico 5 =============================================
 fig5 = px.sunburst(
@@ -255,6 +308,7 @@ fig5 = px.sunburst(
     values='vendas',
     color='empresas', hover_data=['empresas'],
     color_continuous_scale='Inferno',
+    template='plotly_dark'
     
 )
 fig5.layout.update({'height':800})
@@ -271,6 +325,9 @@ app.layout = html.Div([
 
     html.Br(),
     dcc.Graph(figure = fig2),
+
+    html.Br(),
+    dcc.Graph(figure = fig3),
 
     html.Br(),
     dcc.Graph(figure = fig5)
