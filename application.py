@@ -12,7 +12,7 @@ import plotly.figure_factory as ff # Gráfico 2
 # [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Bar Charts
 # [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
 # [] Gráfico 3: Vendas por região - Bubble Maps
-# [] Gráfico 4: Vendas por publicadora ao longo dos anos - Line Charts
+# [] Gráfico 4: Vendas por publicadora que não fabricam consoles ao longo dos anos - Line Charts
 # [X] Gráfico 5: Vendas por plataforma - Sunburst
 
 # Dados começam em 1980 e terminam em 2020
@@ -139,11 +139,13 @@ tabela = [['Gênero', 'Vendas'],
 # Dados 3
 
 # North America, European Union, Japan
-lat = [44.76, 50.03, 37.36]
-long = [-99.53, 10.14, 139.34]
+lat = [44.76, 50.03, 37.36, -15.96]
+long = [-99.53, 10.14, 139.34, -5.70]
 vendas_na = 0
 vendas_eu = 0
 vendas_jp = 0
+vendas_outros = 0
+vendas_3 = []
 
 # 1763 NA
 # 837 EU
@@ -153,9 +155,16 @@ for linha in df_array:
     vendas_na += int(linha[6])
     vendas_eu += int(linha[7])
     vendas_jp += int(linha[8])
+    vendas_outros += int(linha[9])
+
+vendas_3.append(vendas_na)
+vendas_3.append(vendas_eu)
+vendas_3.append(vendas_jp)
+vendas_3.append(vendas_outros)
 
 # ----------------------------------------------------------------------------------
 # Dados 4
+
 # 5 Publicadoras que mais publicaram e não fabricam consoles
 publicadoras_apenas = ['Electronic Arts', 'Activision', 'Namco Bandai Games', 'Ubisoft', 'Konami Digital Entertainment']
 
@@ -224,7 +233,6 @@ PLOTLY E DASH
 ↓↓↓
 '''
 
-
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
@@ -269,36 +277,37 @@ fig2.update_layout(
 )
 
 # ========================================== Gráfico 3 =============================================
-fig3 = go.Figure()
+limits = [(400, 600), (700, 900), (1500, 2000), (2200, 5000)]
+cores = ["green", "royalblue", "crimson", "yellow"]
 
-limits = [(400, 600), (700, 900), (1500, 2000)]
-cores = ["royalblue","crimson","lightseagreen"]
+fig3 = go.Figure()
+scale = 50
 
 for i in range(len(limits)):
     lim = limits[i]
 
     fig3.add_trace(go.Scattergeo(
-                    lon = long,
-                    lat = lat,
+                    lon = (long[i],lat),
+                    lat = (lat[i],long),
                     marker = dict(
-                        size = vendas_na,
+                        size = vendas_3[i]/scale,
                         color = cores[i],
                         line_color = 'rgb(40,40,40)',
                         line_width = 0.5,
                         sizemode = 'area'
                     ),
-                    name = '{0} - {1}'.format(lim[0],lim[1])
     ))
+
 
 fig3.update_layout(
     title_text = 'Vendas por região',
-    showlegend = True,
+    showlegend = False,
     geo = dict(
         landcolor = 'rgb(217, 217, 217)'
     ),
-    template='plotly_dark'
+    template='plotly_dark',
+    autosize=True
 )
-
 
 # ========================================== Gráfico 5 =============================================
 fig5 = px.sunburst(
@@ -306,8 +315,6 @@ fig5 = px.sunburst(
     names='consoles',
     parents='empresas',
     values='vendas',
-    color='empresas', hover_data=['empresas'],
-    color_continuous_scale='Inferno',
     template='plotly_dark'
     
 )
@@ -338,3 +345,4 @@ app.layout = html.Div([
 # O Dash vai atualizar sozinho a cada 5 segundos +-, ou vc pode só clicar em reload mesmo
 if __name__ == "__main__":
     app.run_server(debug=True)
+
