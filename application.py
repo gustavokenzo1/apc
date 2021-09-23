@@ -11,7 +11,7 @@ import plotly.figure_factory as ff # Gráfico 2
 
 # [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Bar Charts
 # [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
-# [] Gráfico 3: Vendas por região - Bubble Maps
+# [X] Gráfico 3: Vendas por região - Bubble Maps
 # [] Gráfico 4: Vendas por publicadora que não fabricam consoles ao longo dos anos - Line Charts
 # [X] Gráfico 5: Vendas por plataforma - Sunburst
 
@@ -146,6 +146,7 @@ vendas_eu = 0
 vendas_jp = 0
 vendas_outros = 0
 vendas_3 = []
+regions = ['América do Norte', 'União Européia', 'Japão', 'Outros']
 
 # 1763 NA
 # 837 EU
@@ -168,14 +169,52 @@ vendas_3.append(vendas_outros)
 # 5 Publicadoras que mais publicaram e não fabricam consoles
 publicadoras_apenas = ['Electronic Arts', 'Activision', 'Namco Bandai Games', 'Ubisoft', 'Konami Digital Entertainment']
 
-# 1980, 1990, 2000, 2010
+anos_4 = [1980, 1990, 2000, 2010, 2020]
+ubisoft = []
 ea = []
-act = []
-namco = []
-bugsoft = []
-konami = []
+activision = []
+take_two = []
+bandai_namco = []
 
+for i in range(1980, 2021, 5):
 
+    ubisoft_ = ea_ = activision_ = take_two_ = bandai_namco_ = 0
+
+    for linha in df_array:
+        if linha[5] == 'Ubisoft' and linha[3] == float(i):
+            if linha[10] == 0.0:
+                break
+            else:
+                ubisoft_ += linha[10]
+
+        if linha[5] == 'Electronic Arts' and linha[3] == float(i):
+            if linha[10] == 0.0:
+                break
+            else:
+                ea_ += linha[10]
+        if linha[5] == 'Activision' and linha[3] == float(i):
+            if linha[10] == 0.0:
+                break
+            else:
+                activision_ += linha[10]
+                
+        if linha[5] == 'Take-Two Interactive' and linha[3] == float(i):
+            if linha[10] == 0.0:
+                break
+            else:
+                take_two_ += linha[10]
+        if linha[5] == 'Namco Bandai Games' and linha[3] == float(i):
+            if linha[10] == 0.0:
+                break
+            else:
+                bandai_namco_ += linha[10]
+
+    ubisoft.append(ubisoft_)
+    ea.append(ea_)
+    activision.append(activision_)
+    take_two.append(take_two_)
+    bandai_namco.append(bandai_namco_)
+    
 # ----------------------------------------------------------------------------------
 
 # Dados 5
@@ -269,7 +308,6 @@ fig2.update_layout(
     title='Vendas por gêneros',
     height=800,
     font=dict(
-        family="Press Start 2P",
         size=15,
         color="RebeccaPurple"
     ),
@@ -296,18 +334,22 @@ for i in range(len(limits)):
                         line_width = 0.5,
                         sizemode = 'area'
                     ),
+                    name = '{0}'.format(regions[i])
     ))
 
 
 fig3.update_layout(
     title_text = 'Vendas por região',
-    showlegend = False,
+    showlegend = True,
     geo = dict(
         landcolor = 'rgb(217, 217, 217)'
     ),
     template='plotly_dark',
     autosize=True
 )
+
+# ========================================== Gráfico 4 =============================================
+""" fig4 = px.line(x=anos_4, y=) """
 
 # ========================================== Gráfico 5 =============================================
 fig5 = px.sunburst(
@@ -322,7 +364,7 @@ fig5.layout.update({'height':800})
 
 # ==================================================================================================
 
-# Estilizar o Dash
+""" # Estilizar o Dash
 # Layout do Dash, sempre que quiser fazer o gráfico aparecer, colocar aqui
 app.layout = html.Div([
     html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
@@ -344,5 +386,5 @@ app.layout = html.Div([
 # Para ficar mais dinâmico, basta deixar o código rodando apertar Ctrl + S para salvar,
 # O Dash vai atualizar sozinho a cada 5 segundos +-, ou vc pode só clicar em reload mesmo
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True) """
 
