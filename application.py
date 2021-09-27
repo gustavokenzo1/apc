@@ -1,11 +1,11 @@
-from pandas import read_csv
+from pandas import read_csv # pip install pandas
 
-import dash
+import dash # pip install dash
 import dash_core_components as dcc
 import dash_html_components as html
-import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc # pip install dash-boostrap-components
 
-import plotly.express as px
+import plotly.express as px #pip install plotly
 import plotly.graph_objects as go
 import plotly.figure_factory as ff # Gráfico 2
 
@@ -21,6 +21,12 @@ import plotly.figure_factory as ff # Gráfico 2
 df = read_csv("vgsales.csv")
 # Pegar cada jogo e transformar todos os seus dados em um item de uma lista chamada df_array
 df_array = df.values
+
+"""
+
+Manipulação dos dados + Plotly
+
+"""
 
 # ----------------------------------------------------------------------------------
 # Dados 1
@@ -54,27 +60,14 @@ for i in range(1980, 2021):
     anos_filtro.append(total_ano)
     todos.append(i)
 
-# ----------------------------------------------------------------------------------
 
-# Mesma lógica dos anos
-publicadoras = []
+# Gráfico 1
+fig1 = px.bar(x=todos, y=anos_filtro)
 
-for linha in df_array:
-    publicadoras.append(linha[5])
-
-publicadoras_filtro = []
-
-# Passar tudo para string, pois tem um valor "nan" que não é string
-for i in range(len(publicadoras)):
-    publicadoras[i] = str(publicadoras[i])
-
-# Se a publicadora estiver not availabe or unknown, não colocar na lista
-for i in range(len(publicadoras)):
-    if publicadoras[i] != 'nan' and publicadoras[i] != 'Unknown':
-        publicadoras_filtro.append(publicadoras[i])
-
-# O set() filtra todos os repetidos, o key serve para o sorted saber com o que se deve ordernar, e o reversed é para ficar em ordem crescente
-comum = sorted(set(publicadoras_filtro), key=publicadoras_filtro.count, reverse=True)
+fig1.update_layout(
+    title='Vendas por ano',
+    template='plotly_dark'
+)
 
 # ----------------------------------------------------------------------------------
 # Dados 2
@@ -135,6 +128,36 @@ tabela = [['Gênero', 'Vendas'],
             ['Simulação', sim],
             ['Ação', action]]
 
+
+# Gráfico 2
+# ff foi importado
+fig2 = ff.create_table(tabela, height_constant=50)
+
+trace_fig2 = go.Scatter(x=todos_generos, y=generos, xaxis='x2', yaxis='y2',
+                        marker=dict(color='#9400d3'),
+                        name='Vendas Globais')
+
+fig2.add_trace(trace_fig2)
+
+fig2['layout']['xaxis2'] = {}
+fig2['layout']['yaxis2'] = {}
+fig2.layout.xaxis.update({'domain': [0, .5]})
+fig2.layout.xaxis2.update({'domain': [.6, 1]})
+fig2.layout.yaxis2.update({'anchor': 'x2'})
+fig2.layout.yaxis2.update({'title': 'Vendas'})
+fig2.layout.margin.update({'t':75, 'l':50, 'r': 70})
+
+fig2.update_layout(
+    title='Vendas por gêneros',
+    height=800,
+    font=dict(
+        size=15,
+        color="RebeccaPurple"
+    ),
+    template='plotly_dark'
+)
+
+
 # ----------------------------------------------------------------------------------
 # Dados 3
 
@@ -163,13 +186,48 @@ vendas_3.append(vendas_eu)
 vendas_3.append(vendas_jp)
 vendas_3.append(vendas_outros)
 
+
+# Gráfico 3
+limits = [(400, 600), (700, 900), (1500, 2000), (2200, 5000)]
+cores = ["green", "royalblue", "crimson", "yellow"]
+
+fig3 = go.Figure()
+scale = 50
+
+for i in range(len(limits)):
+    lim = limits[i]
+
+    fig3.add_trace(go.Scattergeo(
+                    lon = (long[i],lat),
+                    lat = (lat[i],long),
+                    marker = dict(
+                        size = vendas_3[i]/scale,
+                        color = cores[i],
+                        line_color = 'rgb(40,40,40)',
+                        line_width = 0.5,
+                        sizemode = 'area'
+                    ),
+                    name = '{0}'.format(regions[i]),
+    ))
+
+fig3.update_layout(
+    title_text = 'Vendas por região',
+    showlegend = True,
+    geo = dict(
+        landcolor = 'rgb(217, 217, 217)'
+    ),
+    template='plotly_dark',
+    autosize=True
+)
+
+
 # ----------------------------------------------------------------------------------
 # Dados 4
 
 # 5 Publicadoras que mais publicaram e não fabricam consoles
 publicadoras_apenas = ['Electronic Arts', 'Activision', 'Namco Bandai Games', 'Ubisoft', 'Konami Digital Entertainment']
 
-anos_4 = [1980, 1990, 2000, 2010, 2020]
+anos_4 = []
 ubisoft = []
 ea = []
 activision = []
@@ -177,44 +235,52 @@ take_two = []
 bandai_namco = []
 
 for i in range(1980, 2021, 5):
+    anos_4.append(i)
+
+for i in range(1980, 2021, 5):
 
     ubisoft_ = ea_ = activision_ = take_two_ = bandai_namco_ = 0
 
     for linha in df_array:
         if linha[5] == 'Ubisoft' and linha[3] == float(i):
-            if linha[10] == 0.0:
-                break
-            else:
-                ubisoft_ += linha[10]
+            ubisoft_ += linha[10]
 
         if linha[5] == 'Electronic Arts' and linha[3] == float(i):
-            if linha[10] == 0.0:
-                break
-            else:
-                ea_ += linha[10]
+            ea_ += linha[10]
+
         if linha[5] == 'Activision' and linha[3] == float(i):
-            if linha[10] == 0.0:
-                break
-            else:
-                activision_ += linha[10]
+            activision_ += linha[10]
                 
         if linha[5] == 'Take-Two Interactive' and linha[3] == float(i):
-            if linha[10] == 0.0:
-                break
-            else:
-                take_two_ += linha[10]
+            take_two_ += linha[10]
+
         if linha[5] == 'Namco Bandai Games' and linha[3] == float(i):
-            if linha[10] == 0.0:
-                break
-            else:
-                bandai_namco_ += linha[10]
+            bandai_namco_ += linha[10]
 
     ubisoft.append(ubisoft_)
     ea.append(ea_)
     activision.append(activision_)
     take_two.append(take_two_)
     bandai_namco.append(bandai_namco_)
-    
+
+publicadoras_4 = []
+publicadoras_4.append(ubisoft)
+publicadoras_4.append(ea)
+publicadoras_4.append(take_two)
+publicadoras_4.append(activision)
+publicadoras_4.append(bandai_namco)
+
+# Gráfico 4
+
+fig4 = go.Figure()
+
+for i in range(5):
+    fig4.add_trace(go.Scatter(x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
+
+fig4.update_traces(hoverinfo='name+y')
+fig4.update_layout(title='Vendas por Publicadoras de Jogos',
+                   template='plotly_dark')
+
 # ----------------------------------------------------------------------------------
 
 # Dados 5
@@ -262,96 +328,7 @@ data = dict (
     vendas = [plataforma, sony, microsoft, computador, nintendo, atari, snk, ps3, computador, ps4, nes, ps2, x360, n64, xone, psp, gb, atari, wii, ng]) 
 
 
-# ----------------------------------------------------------------------------------
-
-'''
-↑↑↑
-MANIPULAÇÕES DA BASE DE DADOS
--------------------------------------------------------------------------------
-PLOTLY E DASH 
-↓↓↓
-'''
-
-# Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
-# Inicializar o Dash na variável app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
-
-# Criar os gráficos
-
-# ========================================== Gráfico 1 =============================================
-fig1 = px.bar(x=todos, y=anos_filtro)
-
-fig1.update_layout(
-    title='Vendas por ano',
-    template='plotly_dark'
-)
-
-# ========================================== Gráfico 2 =============================================
-# ff foi importado
-fig2 = ff.create_table(tabela, height_constant=50)
-
-trace_fig2 = go.Scatter(x=todos_generos, y=generos, xaxis='x2', yaxis='y2',
-                        marker=dict(color='#9400d3'),
-                        name='Vendas Globais')
-
-fig2.add_trace(trace_fig2)
-
-fig2['layout']['xaxis2'] = {}
-fig2['layout']['yaxis2'] = {}
-fig2.layout.xaxis.update({'domain': [0, .5]})
-fig2.layout.xaxis2.update({'domain': [.6, 1]})
-fig2.layout.yaxis2.update({'anchor': 'x2'})
-fig2.layout.yaxis2.update({'title': 'Vendas (em milhões de unidades)'})
-fig2.layout.margin.update({'t':75, 'l':50, 'r': 70})
-
-fig2.update_layout(
-    title='Vendas por gêneros',
-    height=800,
-    font=dict(
-        size=15,
-        color="RebeccaPurple"
-    ),
-    template='plotly_dark'
-)
-
-# ========================================== Gráfico 3 =============================================
-limits = [(400, 600), (700, 900), (1500, 2000), (2200, 5000)]
-cores = ["green", "royalblue", "crimson", "yellow"]
-
-fig3 = go.Figure()
-scale = 50
-
-for i in range(len(limits)):
-    lim = limits[i]
-
-    fig3.add_trace(go.Scattergeo(
-                    lon = (long[i],lat),
-                    lat = (lat[i],long),
-                    marker = dict(
-                        size = vendas_3[i]/scale,
-                        color = cores[i],
-                        line_color = 'rgb(40,40,40)',
-                        line_width = 0.5,
-                        sizemode = 'area'
-                    ),
-                    name = '{0}'.format(regions[i])
-    ))
-
-
-fig3.update_layout(
-    title_text = 'Vendas por região',
-    showlegend = True,
-    geo = dict(
-        landcolor = 'rgb(217, 217, 217)'
-    ),
-    template='plotly_dark',
-    autosize=True
-)
-
-# ========================================== Gráfico 4 =============================================
-""" fig4 = px.line(x=anos_4, y=) """
-
-# ========================================== Gráfico 5 =============================================
+# Gráfico 5
 fig5 = px.sunburst(
     data,
     names='consoles',
@@ -362,12 +339,25 @@ fig5 = px.sunburst(
 )
 fig5.layout.update({'height':800})
 
-# ==================================================================================================
+"""
 
-""" # Estilizar o Dash
+Dash
+
+"""
+
+# Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
+# Inicializar o Dash na variável app
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
+
+# Estilizar o Dash
 # Layout do Dash, sempre que quiser fazer o gráfico aparecer, colocar aqui
-app.layout = html.Div([
+app.layout = html.Div(
+    
+    className="div-principal", children=[
+
     html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
+    html.Br(),
+    html.H5("Observação: todos os dados estão em milhões de unidades"),
 
     html.Br(), # Br =  break, ou quebra de linha, para deixar mais espaçado
     dcc.Graph(figure = fig1),
@@ -379,6 +369,9 @@ app.layout = html.Div([
     dcc.Graph(figure = fig3),
 
     html.Br(),
+    dcc.Graph(figure = fig4),
+
+    html.Br(),
     dcc.Graph(figure = fig5)
 ])
 
@@ -386,5 +379,4 @@ app.layout = html.Div([
 # Para ficar mais dinâmico, basta deixar o código rodando apertar Ctrl + S para salvar,
 # O Dash vai atualizar sozinho a cada 5 segundos +-, ou vc pode só clicar em reload mesmo
 if __name__ == "__main__":
-    app.run_server(debug=True) """
-
+    app.run_server(debug=True)
