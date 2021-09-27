@@ -1,8 +1,8 @@
 from pandas import read_csv # pip install pandas
 
 import dash # pip install dash
-import dash_core_components as dcc
-import dash_html_components as html
+import dash_core_components as dcc # pip install dash-core-components
+import dash_html_components as html # pip install dash-html-components
 import dash_bootstrap_components as dbc # pip install dash-boostrap-components
 
 import plotly.express as px #pip install plotly
@@ -144,7 +144,7 @@ fig2['layout']['yaxis2'] = {}
 fig2.layout.xaxis.update({'domain': [0, .5]})
 fig2.layout.xaxis2.update({'domain': [.6, 1]})
 fig2.layout.yaxis2.update({'anchor': 'x2'})
-fig2.layout.yaxis2.update({'title': 'Vendas (em milhões de unidades)'})
+fig2.layout.yaxis2.update({'title': 'Vendas'})
 fig2.layout.margin.update({'t':75, 'l':50, 'r': 70})
 
 fig2.update_layout(
@@ -207,9 +207,8 @@ for i in range(len(limits)):
                         line_width = 0.5,
                         sizemode = 'area'
                     ),
-                    name = '{0}'.format(regions[i])
+                    name = '{0}'.format(regions[i]),
     ))
-
 
 fig3.update_layout(
     title_text = 'Vendas por região',
@@ -220,6 +219,7 @@ fig3.update_layout(
     template='plotly_dark',
     autosize=True
 )
+
 
 # ----------------------------------------------------------------------------------
 # Dados 4
@@ -266,15 +266,20 @@ for i in range(1980, 2021, 5):
 publicadoras_4 = []
 publicadoras_4.append(ubisoft)
 publicadoras_4.append(ea)
-publicadoras_4.append(activision)
 publicadoras_4.append(take_two)
+publicadoras_4.append(activision)
 publicadoras_4.append(bandai_namco)
 
 # Gráfico 4
 
 fig4 = go.Figure()
 
-fig4.add_trace(go.Scatter(x=anos_4, y=ubisoft, mode='lines'))
+for i in range(5):
+    fig4.add_trace(go.Scatter(x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
+
+fig4.update_traces(hoverinfo='name+y')
+fig4.update_layout(title='Vendas por Publicadoras de Jogos',
+                   template='plotly_dark')
 
 # ----------------------------------------------------------------------------------
 
@@ -346,8 +351,13 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
 
 # Estilizar o Dash
 # Layout do Dash, sempre que quiser fazer o gráfico aparecer, colocar aqui
-app.layout = html.Div([
+app.layout = html.Div(
+    
+    className="div-principal", children=[
+
     html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
+    html.Br(),
+    html.H5("Observação: todos os dados estão em milhões de unidades"),
 
     html.Br(), # Br =  break, ou quebra de linha, para deixar mais espaçado
     dcc.Graph(figure = fig1),
@@ -370,4 +380,3 @@ app.layout = html.Div([
 # O Dash vai atualizar sozinho a cada 5 segundos +-, ou vc pode só clicar em reload mesmo
 if __name__ == "__main__":
     app.run_server(debug=True)
-
