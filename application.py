@@ -1,8 +1,8 @@
 from pandas import read_csv # pip install pandas
 
 import dash # pip install dash
-import dash_core_components as dcc
-import dash_html_components as html
+import dash_core_components as dcc # pip install dash-core-components
+import dash_html_components as html # pip install dash-html-components
 import dash_bootstrap_components as dbc # pip install dash-boostrap-components
 
 import plotly.express as px #pip install plotly
