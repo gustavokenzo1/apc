@@ -128,26 +128,39 @@ tabela = [['Gênero', 'Vendas'],
 
 
 # Gráfico 2
-# ff foi importado
+# ff foi importado para criar tabela
 fig2 = ff.create_table(tabela, height_constant=50)
 
-fig2.add_trace(go.Scatter(x=todos_generos, y=generos, xaxis='x2', yaxis='y2',
+fig2.add_trace(go.Scatter(x=todos_generos, y=generos, 
+                        xaxis='x2', yaxis='y2',
                         marker=dict(color='#9400d3'),
                         name='Vendas Globais'))
 
+# Inicializar eixos x e y
 fig2['layout']['xaxis2'] = {}
 fig2['layout']['yaxis2'] = {}
-fig2.layout.xaxis.update({'domain': [0, .5]})
-fig2.layout.xaxis2.update({'domain': [.6, 1]})
-fig2.layout.yaxis2.update({'anchor': 'x2'})
-fig2.layout.yaxis2.update({'title': 'Vendas'})
-fig2.layout.margin.update({'t':75, 'l':50, 'r': 70})
 
 fig2.update_layout(
     title='Vendas por Gêneros',
     height=800,
     font=dict(
         size=15
+    ),
+    margin=dict(
+        t=75,
+        l=50,
+        r=70,
+        b=75
+    ),
+    xaxis=dict(
+        domain=[0, .5]
+    ),
+    xaxis2=dict(
+        domain=[.6, 1]
+    ),
+    yaxis2=dict(
+        anchor='x2',
+        title='Vendas'
     ),
     template='plotly_dark'
 )
@@ -269,7 +282,7 @@ fig4.update_traces(hoverinfo='name+y+x',
                    hovertemplate=None
                    )
 
-fig4.update_layout(title='Vendas por Publicadoras de Jogos',
+fig4.update_layout(title='Vendas por Publicadoras de Jogos a Cada 5 Anos',
                    template='plotly_dark', 
                    hovermode='x unified'
                    )
@@ -351,7 +364,7 @@ app = dash.Dash(__name__,
 app.layout = html.Div(
     className='div-principal',
     children=[
-        html.Header(className='container',
+        html.Header(className='cabecalho',
             children=[
                 html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
                 html.Br(),
