@@ -22,6 +22,7 @@ df = read_csv("vgsales.csv")
 # Pegar cada jogo e transformar todos os seus dados em um item de uma lista chamada df_array
 df_array = df.values
 
+
 """
 
 Manipulação dos dados + Plotly
@@ -52,7 +53,7 @@ anos_filtro = []
 # Todos é uma array para guardar todos os anos analisados
 todos = []
 
-# Loop de 1980 a 2020
+# Loop de 1980 a 2016
 for i in range(1980, 2016):
     # O total de cada ano vai ser quantos itens com o mesmo ano iguais existem 
     total_ano = anos.count(i)
@@ -72,7 +73,7 @@ fig1.update_layout(
 )
 
 fig1.update_traces(
-    hovertemplate='Vendas: %{y} milhões <br> Ano: %{x}'
+    hovertemplate='Vendas: %{y} <br> Ano: %{x}'
 )
 # ----------------------------------------------------------------------------------
 # Dados 2
@@ -85,51 +86,59 @@ todos_generos= ['Esportes', 'Corrida', 'RPG', 'Puzzle', 'Diversos', 'Tiro', 'Sim
 sports = racing = rpg = puzzle = misc = fps = sim = action = 0
 
 # Para cada jogo, pegar o número de vendas globais (índice 10 no csv) e ir somando de acordo com o gênero do jogo
+
 for linha in df_array:
     if linha[4] == 'Sports':
-        sports += int(linha[10])
+        sports += linha[10]
+
     if linha[4] == 'Racing':
-        racing += int(linha[10])
+        racing += linha[10]
+
     if linha[4] == 'Role-Playing':
-        rpg += int(linha[10])
+        rpg += linha[10]
+
     if linha[4] == 'Puzzle':
-        puzzle += int(linha[10])
+        puzzle += linha[10]
+
     if linha[4] == 'Misc':
-        misc += int(linha[10])
+        misc += linha[10]                     
+
     if linha[4] == 'Shooter':
-        fps += int(linha[10])
+        fps += linha[10]
+
     if linha[4] == 'Simulation':
-        sim += int(linha[10])
+        sim += linha[10]
+
     if linha[4] == 'Action':
-        action += int(linha[10])
+        action += linha[10]
 
 # Guardar o número de vendas numa array para usar no gráfico de linhas 
-generos.append(sports)
-generos.append(racing)
-generos.append(rpg)
-generos.append(puzzle)
-generos.append(misc)
-generos.append(fps)
-generos.append(sim)
-generos.append(action)
+generos.append(int(sports))
+generos.append(int(racing))
+generos.append(int(rpg))
+generos.append(int(puzzle))
+generos.append(int(misc))
+generos.append(int(fps))
+generos.append(int(sim))
+generos.append(int(action))
 
 # Criação da tabela
 # A primeira linha indica o nome de cada coluna
 # As linhas seguintes associam o nome do gênero ao número de vendas
 tabela = [['Gênero', 'Vendas'],
-            ['Esportes', sports],
-            ['Corrida', racing],
-            ['RPG', rpg],
-            ['Puzzle', puzzle],
-            ['Diversos',misc],
-            ['Tiro', fps],
-            ['Simulação', sim],
-            ['Ação', action]]
+            ['Esportes', int(sports)],
+            ['Corrida', int(racing)],
+            ['RPG', int(rpg)],
+            ['Puzzle', int(puzzle)],
+            ['Diversos', int(misc)],
+            ['Tiro', int(fps)],
+            ['Simulação', int(sim)],
+            ['Ação', int(action)]]
 
 
 # Gráfico 2
 # ff foi importado para criar tabela
-fig2 = ff.create_table(tabela, height_constant=50)
+fig2 = ff.create_table(tabela)
 
 fig2.add_trace(go.Scatter(x=todos_generos, y=generos, 
                         xaxis='x2', yaxis='y2',
@@ -148,18 +157,18 @@ fig2.update_layout(
     ),
     margin=dict(
         t=75,
-        l=50,
+        l=60,
         r=70,
         b=75
     ),
     xaxis=dict(
-        domain=[0, .5]
+        domain=[0, 0.5] # Comprimento da tabela (0.5 significa que ocupa metade do espaço)
     ),
     xaxis2=dict(
-        domain=[.6, 1]
+        domain=[.6, 1] # Altera a largura do gráfico de linhas
     ),
     yaxis2=dict(
-        anchor='x2',
+        anchor='x2', # Ancorar o título ao eixo x2 do gráfico de linhas
         title='Vendas'
     ),
     template='plotly_dark'
@@ -207,7 +216,7 @@ for i in range(4):
                         sizemode = 'area'
                     ),
                     name = '{0}'.format(regions[i]),
-                    hovertemplate='Vendas: {0} milhões'.format(vendas_3[i])
+                    hovertemplate='Vendas: {0}'.format(vendas_3[i])
     ))
 
 fig3.update_layout(
