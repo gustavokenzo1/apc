@@ -12,10 +12,10 @@ import plotly.figure_factory as ff # Gráfico 2
 # [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Bar Charts
 # [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
 # [X] Gráfico 3: Vendas por região - Bubble Maps
-# [] Gráfico 4: Vendas por publicadora que não fabricam consoles ao longo dos anos - Line Charts
+# [X] Gráfico 4: Vendas por publicadora que não fabricam consoles ao longo dos anos - Line Charts
 # [X] Gráfico 5: Vendas por plataforma - Sunburst
 
-# Dados começam em 1980 e terminam em 2020
+# Dados começam em 1980 e terminam em 2016
 
 # Usar o pandas apenas para ler o arquivo csv
 df = read_csv("vgsales.csv")
@@ -53,7 +53,7 @@ anos_filtro = []
 todos = []
 
 # Loop de 1980 a 2020
-for i in range(1980, 2021):
+for i in range(1980, 2016):
     # O total de cada ano vai ser quantos itens com o mesmo ano iguais existem 
     total_ano = anos.count(i)
     # Guardar na lista
@@ -65,10 +65,15 @@ for i in range(1980, 2021):
 fig1 = px.bar(x=todos, y=anos_filtro)
 
 fig1.update_layout(
-    title='Vendas por ano',
-    template='plotly_dark'
+    title='Vendas Globais por Ano',
+    template='plotly_dark',
+    xaxis={'title': 'Anos'},
+    yaxis={'title': 'Vendas'}
 )
 
+fig1.update_traces(
+    hovertemplate='Vendas: %{y} milhões <br> Ano: %{x}'
+)
 # ----------------------------------------------------------------------------------
 # Dados 2
 
@@ -77,14 +82,7 @@ todos_generos= ['Esportes', 'Corrida', 'RPG', 'Puzzle', 'Diversos', 'Tiro', 'Sim
 # Gêneros mais populares:
 # Sports, Racing, Role-Playing, Puzzle, Misc, Shooter, Simulation, Action
 
-sports = 0
-racing = 0
-rpg = 0
-puzzle = 0
-misc = 0
-fps = 0
-sim = 0
-action = 0
+sports = racing = rpg = puzzle = misc = fps = sim = action = 0
 
 # Para cada jogo, pegar o número de vendas globais (índice 10 no csv) e ir somando de acordo com o gênero do jogo
 for linha in df_array:
@@ -133,11 +131,9 @@ tabela = [['Gênero', 'Vendas'],
 # ff foi importado
 fig2 = ff.create_table(tabela, height_constant=50)
 
-trace_fig2 = go.Scatter(x=todos_generos, y=generos, xaxis='x2', yaxis='y2',
+fig2.add_trace(go.Scatter(x=todos_generos, y=generos, xaxis='x2', yaxis='y2',
                         marker=dict(color='#9400d3'),
-                        name='Vendas Globais')
-
-fig2.add_trace(trace_fig2)
+                        name='Vendas Globais'))
 
 fig2['layout']['xaxis2'] = {}
 fig2['layout']['yaxis2'] = {}
@@ -148,11 +144,10 @@ fig2.layout.yaxis2.update({'title': 'Vendas'})
 fig2.layout.margin.update({'t':75, 'l':50, 'r': 70})
 
 fig2.update_layout(
-    title='Vendas por gêneros',
+    title='Vendas por Gêneros',
     height=800,
     font=dict(
-        size=15,
-        color="RebeccaPurple"
+        size=15
     ),
     template='plotly_dark'
 )
@@ -164,16 +159,9 @@ fig2.update_layout(
 # North America, European Union, Japan
 lat = [44.76, 50.03, 37.36, -15.96]
 long = [-99.53, 10.14, 139.34, -5.70]
-vendas_na = 0
-vendas_eu = 0
-vendas_jp = 0
-vendas_outros = 0
+vendas_na = vendas_eu = vendas_jp = vendas_outros = 0
 vendas_3 = []
 regions = ['América do Norte', 'União Européia', 'Japão', 'Outros']
-
-# 1763 NA
-# 837 EU
-# 406 JP
 
 for linha in df_array:
     vendas_na += int(linha[6])
@@ -188,14 +176,12 @@ vendas_3.append(vendas_outros)
 
 
 # Gráfico 3
-limits = [(400, 600), (700, 900), (1500, 2000), (2200, 5000)]
 cores = ["green", "royalblue", "crimson", "yellow"]
 
 fig3 = go.Figure()
 scale = 50
 
-for i in range(len(limits)):
-    lim = limits[i]
+for i in range(4):
 
     fig3.add_trace(go.Scattergeo(
                     lon = (long[i],lat),
@@ -208,10 +194,11 @@ for i in range(len(limits)):
                         sizemode = 'area'
                     ),
                     name = '{0}'.format(regions[i]),
+                    hovertemplate='Vendas: {0} milhões'.format(vendas_3[i])
     ))
 
 fig3.update_layout(
-    title_text = 'Vendas por região',
+    title_text = 'Vendas por Região',
     showlegend = True,
     geo = dict(
         landcolor = 'rgb(217, 217, 217)'
@@ -219,6 +206,7 @@ fig3.update_layout(
     template='plotly_dark',
     autosize=True
 )
+
 
 
 # ----------------------------------------------------------------------------------
@@ -234,10 +222,10 @@ activision = []
 take_two = []
 bandai_namco = []
 
-for i in range(1980, 2021, 5):
+for i in range(1980, 2016, 5):
     anos_4.append(i)
 
-for i in range(1980, 2021, 5):
+for i in range(1980, 2016, 5):
 
     ubisoft_ = ea_ = activision_ = take_two_ = bandai_namco_ = 0
 
@@ -277,9 +265,14 @@ fig4 = go.Figure()
 for i in range(5):
     fig4.add_trace(go.Scatter(x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
 
-fig4.update_traces(hoverinfo='name+y')
+fig4.update_traces(hoverinfo='name+y+x', 
+                   hovertemplate=None
+                   )
+
 fig4.update_layout(title='Vendas por Publicadoras de Jogos',
-                   template='plotly_dark')
+                   template='plotly_dark', 
+                   hovermode='x unified'
+                   )
 
 # ----------------------------------------------------------------------------------
 
@@ -334,7 +327,8 @@ fig5 = px.sunburst(
     names='consoles',
     parents='empresas',
     values='vendas',
-    template='plotly_dark'
+    template='plotly_dark',
+    title='Vendas por Plataformas das 5 Maiores Empresas'
     
 )
 fig5.layout.update({'height':800})
@@ -347,33 +341,66 @@ Dash
 
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SLATE])
+app = dash.Dash(__name__, 
+                external_stylesheets=[dbc.themes.SLATE],
+                title='Vendas de Jogos'
+                )
 
 # Estilizar o Dash
 # Layout do Dash, sempre que quiser fazer o gráfico aparecer, colocar aqui
 app.layout = html.Div(
-    
-    className="div-principal", children=[
+    className='div-principal',
+    children=[
+        html.Header(className='container',
+            children=[
+                html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
+                html.Br(),
+                html.H5("(todos os dados estão em milhões de unidades)")
+                ]
+        ),
 
-    html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
-    html.Br(),
-    html.H5("Observação: todos os dados estão em milhões de unidades"),
+        html.Main(
+            children=[
+                html.Div(
+                    id='graph-1',
+                    children=[
+                        html.Br(),
+                        dcc.Graph(figure = fig1)
+                    ]
+                ),
+                html.Div(
+                    id='graph-2',
+                    children=[
+                        html.Br(),
+                        dcc.Graph(figure = fig2)
+                    ]
+                ),
+                html.Div(
+                    id='graph-3',
+                    children=[
+                        html.Br(),
+                        dcc.Graph(figure = fig3)
+                    ]
+                ),
+                html.Div(
+                    id='graph-4',
+                    children=[
+                        html.Br(),
+                        dcc.Graph(figure = fig4)
+                    ]
+                ),
+                html.Div(
+                    id='graph-5',
+                    children=[
+                        html.Br(),
+                        dcc.Graph(figure = fig5)
+                    ]
+                )
+            ]
+        )
+    ]
+)
 
-    html.Br(), # Br =  break, ou quebra de linha, para deixar mais espaçado
-    dcc.Graph(figure = fig1),
-
-    html.Br(),
-    dcc.Graph(figure = fig2),
-
-    html.Br(),
-    dcc.Graph(figure = fig3),
-
-    html.Br(),
-    dcc.Graph(figure = fig4),
-
-    html.Br(),
-    dcc.Graph(figure = fig5)
-])
 
 # Rodar o Dash
 # Para ficar mais dinâmico, basta deixar o código rodando apertar Ctrl + S para salvar,
