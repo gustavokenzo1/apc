@@ -178,44 +178,56 @@ fig2.update_layout(
 # ----------------------------------------------------------------------------------
 # Dados 3
 
-# North America, European Union, Japan
+# North America, European Union, Japan, Ilha de Santa Helena
 lat = [44.76, 50.03, 37.36, -15.96]
 long = [-99.53, 10.14, 139.34, -5.70]
 vendas_na = vendas_eu = vendas_jp = vendas_outros = 0
 vendas_3 = []
+
+# Para colocar na legenda
 regions = ['América do Norte', 'União Européia', 'Japão', 'Outros']
 
+# Contar as vendas em cada região de todos os jogos
 for linha in df_array:
-    vendas_na += int(linha[6])
-    vendas_eu += int(linha[7])
-    vendas_jp += int(linha[8])
-    vendas_outros += int(linha[9])
+    vendas_na += linha[6]
+    vendas_eu += linha[7]
+    vendas_jp += linha[8]
+    vendas_outros += linha[9]
 
-vendas_3.append(vendas_na)
-vendas_3.append(vendas_eu)
-vendas_3.append(vendas_jp)
-vendas_3.append(vendas_outros)
+vendas_3.append(int(vendas_na))
+vendas_3.append(int(vendas_eu))
+vendas_3.append(int(vendas_jp))
+vendas_3.append(int(vendas_outros))
 
 
 # Gráfico 3
+
+# Cores uai
 cores = ["green", "royalblue", "crimson", "yellow"]
 
+# Inicializar o gráfico
 fig3 = go.Figure()
-scale = 50
+# Escala para dividir a área e deixar em um tamanho bom
+scale = 100
 
-for i in range(4):
-
+for i in range(len(regions)):
     fig3.add_trace(go.Scattergeo(
                     lon = (long[i],lat),
                     lat = (lat[i],long),
                     marker = dict(
+                        # Tamanho de cada bolha
                         size = vendas_3[i]/scale,
+                        # 'i'ésima cor da lista
                         color = cores[i],
-                        line_color = 'rgb(40,40,40)',
-                        line_width = 0.5,
+                        # Contorno da bolha
+                        line_color = 'rgb(60,60,60)',
+                        # Expessura do contorno em pixels
+                        line_width = 1,
                         sizemode = 'area'
                     ),
+                    # Nomes na legenda
                     name = '{0}'.format(regions[i]),
+                    # Quando passar o mouse em cima, aparecer legenda formatada
                     hovertemplate='Vendas: {0}'.format(vendas_3[i])
     ))
 
@@ -245,10 +257,11 @@ take_two = []
 bandai_namco = []
 
 for i in range(1980, 2016, 5):
+
+    # Guardar os anos de 5 em 5 na lista
     anos_4.append(i)
 
-for i in range(1980, 2016, 5):
-
+    # Inicializar variáveis para 0
     ubisoft_ = ea_ = activision_ = take_two_ = bandai_namco_ = 0
 
     for linha in df_array:
@@ -273,6 +286,7 @@ for i in range(1980, 2016, 5):
     take_two.append(take_two_)
     bandai_namco.append(bandai_namco_)
 
+# publicadoras_4 é uma lista de listas 
 publicadoras_4 = []
 publicadoras_4.append(ubisoft)
 publicadoras_4.append(ea)
@@ -284,7 +298,7 @@ publicadoras_4.append(bandai_namco)
 
 fig4 = go.Figure()
 
-for i in range(5):
+for i in range(len(publicadoras_apenas)):
     fig4.add_trace(go.Scatter(x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
 
 fig4.update_traces(hoverinfo='name+y+x', 
@@ -353,8 +367,13 @@ fig5 = px.sunburst(
     title='Vendas por Plataformas das 5 Maiores Empresas'
     
 )
-fig5.layout.update({'height':800})
 
+fig5.update_layout(
+    height=800,
+    font=dict(
+        color='#fff'
+    )
+)
 """
 
 Dash
@@ -373,11 +392,19 @@ app = dash.Dash(__name__,
 app.layout = html.Div(
     className='div-principal',
     children=[
+        html.Br(),
         html.Header(className='cabecalho',
             children=[
-                html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
+                dbc.Row(
+                    [
+                        dbc.Col(html.Div(children=[html.H1("Grupo 4 - Vendas de Jogos"),
+                                        html.Br(),
+                                        html.H5("(todos os dados estão em milhões de unidades)")])), # H1 = Heading 1, ou cabeçalho
+                        dbc.Col(html.Div(html.Img(src='assets/a.jfif')),
+                        )
+                    ]
+                ),
                 html.Br(),
-                html.H5("(todos os dados estão em milhões de unidades)")
                 ]
         ),
 
@@ -393,28 +420,24 @@ app.layout = html.Div(
                 html.Div(
                     id='graph-2',
                     children=[
-                        html.Br(),
                         dcc.Graph(figure = fig2)
                     ]
                 ),
                 html.Div(
                     id='graph-3',
                     children=[
-                        html.Br(),
                         dcc.Graph(figure = fig3)
                     ]
                 ),
                 html.Div(
                     id='graph-4',
                     children=[
-                        html.Br(),
                         dcc.Graph(figure = fig4)
                     ]
                 ),
                 html.Div(
                     id='graph-5',
                     children=[
-                        html.Br(),
                         dcc.Graph(figure = fig5)
                     ]
                 )
