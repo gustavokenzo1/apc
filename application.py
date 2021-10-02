@@ -207,7 +207,7 @@ cores = ["green", "royalblue", "crimson", "yellow"]
 
 # Inicializar o gráfico
 fig3 = go.Figure()
-# Escala para dividir
+# Escala para dividir a área e deixar em um tamanho bom
 scale = 100
 
 for i in range(len(regions)):
@@ -367,8 +367,13 @@ fig5 = px.sunburst(
     title='Vendas por Plataformas das 5 Maiores Empresas'
     
 )
-fig5.layout.update({'height':800})
 
+fig5.update_layout(
+    height=800,
+    font=dict(
+        color='#fff'
+    )
+)
 """
 
 Dash
@@ -387,11 +392,19 @@ app = dash.Dash(__name__,
 app.layout = html.Div(
     className='div-principal',
     children=[
+        html.Br(),
         html.Header(className='cabecalho',
             children=[
-                html.H1("Grupo 4 - Vendas de Jogos"), # H1 = Heading 1, ou cabeçalho
+                dbc.Row(
+                    [
+                        dbc.Col(html.Div(children=[html.H1("Grupo 4 - Vendas de Jogos"),
+                                        html.Br(),
+                                        html.H5("(todos os dados estão em milhões de unidades)")])), # H1 = Heading 1, ou cabeçalho
+                        dbc.Col(html.Div(html.Img(src='assets/a.jfif')),
+                        )
+                    ]
+                ),
                 html.Br(),
-                html.H5("(todos os dados estão em milhões de unidades)")
                 ]
         ),
 
