@@ -12,7 +12,7 @@ import plotly.figure_factory as ff # Gráfico 2
 # [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Bar Charts
 # [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
 # [X] Gráfico 3: Vendas por região - Bubble Maps
-# [X] Gráfico 4: Vendas por publicadora que não fabricam consoles ao longo dos anos - Line Charts
+# [X] Gráfico 4: Vendas por editoras a cada 5 anos - Line Charts
 # [X] Gráfico 5: Vendas por plataforma - Sunburst
 
 # Dados começam em 1980 e terminam em 2016
@@ -21,6 +21,8 @@ import plotly.figure_factory as ff # Gráfico 2
 df = read_csv("vgsales.csv")
 # Pegar cada jogo e transformar todos os seus dados em um item de uma lista chamada df_array
 df_array = df.values
+
+
 
 
 """
@@ -44,8 +46,6 @@ for linha in df_array:
     except:
         continue
 
-# Ordernar os anos em ordem crescente
-anos.sort()
 # Declarar variável para contar quantos jogos foram lançados em determinado ano
 total_ano = 0
 # Criar array em que cada item vai ser quantos jogos foram lançados em cada ano
@@ -305,7 +305,7 @@ fig4.update_traces(hoverinfo='name+y+x',
                    hovertemplate=None
                    )
 
-fig4.update_layout(title='Vendas por Publicadoras de Jogos a Cada 5 Anos',
+fig4.update_layout(title='Vendas por Editoras a Cada 5 Anos',
                    template='plotly_dark', 
                    hovermode='x unified'
                    )
@@ -400,7 +400,7 @@ app.layout = html.Div(
                         dbc.Col(html.Div(children=[html.H1("Grupo 4 - Vendas de Jogos"),
                                         html.Br(),
                                         html.H5("(todos os dados estão em milhões de unidades)")])), # H1 = Heading 1, ou cabeçalho
-                        dbc.Col(html.Div(html.Img(src='assets/a.jfif')),
+                        dbc.Col(html.Div(html.Img(src='assets/logo.png')),
                         )
                     ]
                 ),
