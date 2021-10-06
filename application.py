@@ -91,49 +91,52 @@ for linha in df_array:
     if linha[4] == 'Sports':
         sports += linha[10]
 
-    if linha[4] == 'Racing':
+    elif linha[4] == 'Racing':
         racing += linha[10]
 
-    if linha[4] == 'Role-Playing':
+    elif linha[4] == 'Role-Playing':
         rpg += linha[10]
 
-    if linha[4] == 'Puzzle':
+    elif linha[4] == 'Puzzle':
         puzzle += linha[10]
 
-    if linha[4] == 'Misc':
+    elif linha[4] == 'Misc':
         misc += linha[10]                     
 
-    if linha[4] == 'Shooter':
+    elif linha[4] == 'Shooter':
         fps += linha[10]
 
-    if linha[4] == 'Simulation':
+    elif linha[4] == 'Simulation':
         sim += linha[10]
 
-    if linha[4] == 'Action':
+    elif linha[4] == 'Action':
         action += linha[10]
 
 # Guardar o número de vendas numa array para usar no gráfico de linhas 
-generos.append(int(sports))
-generos.append(int(racing))
-generos.append(int(rpg))
-generos.append(int(puzzle))
-generos.append(int(misc))
-generos.append(int(fps))
-generos.append(int(sim))
-generos.append(int(action))
+generos.append(sports)
+generos.append(racing)
+generos.append(rpg)
+generos.append(puzzle)
+generos.append(misc)
+generos.append(fps)
+generos.append(sim)
+generos.append(action)
+
+generos = [ int(genero) for genero in generos]
 
 # Criação da tabela
 # A primeira linha indica o nome de cada coluna
 # As linhas seguintes associam o nome do gênero ao número de vendas
+
 tabela = [['Gênero', 'Vendas'],
-            ['Esportes', int(sports)],
-            ['Corrida', int(racing)],
-            ['RPG', int(rpg)],
-            ['Puzzle', int(puzzle)],
-            ['Diversos', int(misc)],
-            ['Tiro', int(fps)],
-            ['Simulação', int(sim)],
-            ['Ação', int(action)]]
+            ['Esportes', generos[0]],
+            ['Corrida', generos[1]],
+            ['RPG', generos[2]],
+            ['Puzzle', generos[3]],
+            ['Diversos', generos[4]],
+            ['Tiro', generos[5]],
+            ['Simulação', generos[6]],
+            ['Ação', generos[7]]]
 
 
 # Gráfico 2
@@ -165,6 +168,7 @@ fig2.update_layout(
         domain=[0, 0.5] # Comprimento da tabela (0.5 significa que ocupa metade do espaço)
     ),
     xaxis2=dict(
+        anchor='y2',
         domain=[.6, 1] # Altera a largura do gráfico de linhas
     ),
     yaxis2=dict(
@@ -203,12 +207,12 @@ vendas_3.append(int(vendas_outros))
 # Gráfico 3
 
 # Cores uai
-cores = ["green", "royalblue", "crimson", "yellow"]
+cores = ["MediumPurple", "LightSkyBlue", "crimson", "limegreen"]
 
 # Inicializar o gráfico
 fig3 = go.Figure()
 # Escala para dividir a área e deixar em um tamanho bom
-scale = 100
+scale = 70
 
 for i in range(len(regions)):
     fig3.add_trace(go.Scattergeo(
@@ -219,8 +223,10 @@ for i in range(len(regions)):
                         size = vendas_3[i]/scale,
                         # 'i'ésima cor da lista
                         color = cores[i],
+                        # Mudar a opacidade de acordo com a quantidade de vendas
+                        opacity=1-0.15*i,
                         # Contorno da bolha
-                        line_color = 'rgb(60,60,60)',
+                        line_color = 'rgb(80,80,80)',
                         # Expessura do contorno em pixels
                         line_width = 1,
                         sizemode = 'area'
@@ -238,7 +244,8 @@ fig3.update_layout(
         landcolor = 'rgb(217, 217, 217)'
     ),
     template='plotly_dark',
-    autosize=True
+    autosize=True,
+    height=700
 )
 
 
@@ -268,16 +275,16 @@ for i in range(1980, 2016, 5):
         if linha[5] == 'Ubisoft' and linha[3] == float(i):
             ubisoft_ += linha[10]
 
-        if linha[5] == 'Electronic Arts' and linha[3] == float(i):
+        elif linha[5] == 'Electronic Arts' and linha[3] == float(i):
             ea_ += linha[10]
 
-        if linha[5] == 'Activision' and linha[3] == float(i):
+        elif linha[5] == 'Activision' and linha[3] == float(i):
             activision_ += linha[10]
                 
-        if linha[5] == 'Take-Two Interactive' and linha[3] == float(i):
+        elif linha[5] == 'Take-Two Interactive' and linha[3] == float(i):
             take_two_ += linha[10]
 
-        if linha[5] == 'Namco Bandai Games' and linha[3] == float(i):
+        elif linha[5] == 'Namco Bandai Games' and linha[3] == float(i):
             bandai_namco_ += linha[10]
 
     ubisoft.append(ubisoft_)
@@ -301,9 +308,7 @@ fig4 = go.Figure()
 for i in range(len(publicadoras_apenas)):
     fig4.add_trace(go.Scatter(x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
 
-fig4.update_traces(hoverinfo='name+y+x', 
-                   hovertemplate=None
-                   )
+fig4.update_traces(hoverinfo='name+y+x')
 
 fig4.update_layout(title='Vendas por Editoras a Cada 5 Anos',
                    template='plotly_dark', 
@@ -352,7 +357,7 @@ plataforma = sony + microsoft + computador + nintendo + atari + snk
 # em seguida, colocar o nome da empresa na mesma posição de cada console dessa empresa
 # Em vendas, colocar o valor de vendas, que vai determinar o tamanho de cada setor do gráfico
 data = dict (
-    consoles = ['Plataforma', 'Sony', 'Microsoft', 'PC', 'Nintendo', 'Atari', 'SNK', 'PlayStation 3', 'Computador', 'PlayStation4', 'NES', 'PlayStation 2', 'Xbox 360', 'Nintendo 64', 'Xbox One', 'PSP', 'GameBoy', 'Atari2600', 'Nintendo Wii' , 'NeoGeo'],
+    consoles = ['Plataforma', 'Sony', 'Microsoft', 'PC', 'Nintendo', 'Atari', 'SNK', 'PlayStation 3', 'Computador', 'PlayStation 4', 'NES', 'PlayStation 2', 'Xbox 360', 'Nintendo 64', 'Xbox One', 'PSP', 'GameBoy', 'Atari2600', 'Nintendo Wii' , 'NeoGeo'],
     empresas = ['', 'Plataforma', 'Plataforma','Plataforma','Plataforma','Plataforma','Plataforma', 'Sony', 'PC', 'Sony', 'Nintendo', 'Sony', 'Microsoft', 'Nintendo', 'Microsoft', 'Sony', 'Nintendo', 'Atari', 'Nintendo', 'SNK' ],
     vendas = [plataforma, sony, microsoft, computador, nintendo, atari, snk, ps3, computador, ps4, nes, ps2, x360, n64, xone, psp, gb, atari, wii, ng]) 
 
@@ -369,10 +374,7 @@ fig5 = px.sunburst(
 )
 
 fig5.update_layout(
-    height=800,
-    font=dict(
-        color='#fff'
-    )
+    height=800
 )
 """
 
