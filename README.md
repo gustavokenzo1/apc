@@ -1,6 +1,11 @@
-# apc
-Repositório para o projeto da disciplina de APC da UnB. 
-Feito em conjunto pelos estudantes:
+# Algoritmos e Programação de Computadores
+### Repositório para o projeto da disciplina de APC da UnB (2021.1). 
+
+## O objetivo do projeto é criar uma dashboard em Python, usando as bibliotecas Plotly (para a plotação dos gráficos) e Dash (para o layout e interatividade).
+
+### O tema escolhido pelo grupo foi o de "Vendas de Jogos"
+
+## Feito em conjunto pelos estudantes:
 
 211030783 - gustavo henrique rodrigues de sousa
 
