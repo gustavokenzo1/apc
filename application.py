@@ -1,9 +1,11 @@
+from dash_html_components.H1 import H1
 from pandas import read_csv # pip install pandas
 
 import dash # pip install dash
 import dash_core_components as dcc # pip install dash-core-components
 import dash_html_components as html # pip install dash-html-components
 import dash_bootstrap_components as dbc # pip install dash-boostrap-components
+from dash.dependencies import Input, Output
 
 import plotly.express as px #pip install plotly
 import plotly.graph_objects as go
@@ -26,9 +28,7 @@ df_array = df.values
 
 
 """
-
 Manipulação dos dados + Plotly
-
 """
 
 # ----------------------------------------------------------------------------------
@@ -377,40 +377,73 @@ fig5.update_layout(
     height=800
 )
 """
-
 Dash
-
 """
+
+antes_style = {
+    'opacity': 0
+}
+
+depois_style = {
+    'opacity': 1,
+    'transition': 'opacity 1.5s ease-in-out'
+}
+
+button_style_antes = {
+    'display': 'block'
+}
+
+button_style_depois = {
+    'display': 'none'
+}
+
+fonte_antes ={
+    'font-size': 50,
+}
+
+fonte_depois={
+    'font-size': 30,
+    'transition': 'font-size 2s ease-in-out',
+}
+
+video_antes = {
+    'background': 'url(./assets/background5.gif)',
+    'height': '100vh',
+    'background-position': 'center',
+    'background-size': 'cover'
+}
+
+video_depois = {
+    'background': 'url(./assets/background.gif)',
+    'height': '100vh',
+    'background-position': 'center',
+    'background-size': 'cover',
+    'transition': 'background 1s ease-in-out',
+}
 
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
 # Inicializar o Dash na variável app
-app = dash.Dash(__name__, 
-                external_stylesheets=[dbc.themes.SLATE],
+app = dash.Dash(__name__,
                 title='Vendas de Jogos'
                 )
 
 # Estilizar o Dash
 # Layout do Dash, sempre que quiser fazer o gráfico aparecer, colocar aqui
 app.layout = html.Div(
-    className='div-principal',
+    className='div-principal', id='video', style=video_antes,
     children=[
         html.Br(),
-        html.Header(className='cabecalho',
+        html.Div(className='cabecalho', id='titulo', style= fonte_antes,
             children=[
-                dbc.Row(
-                    [
-                        dbc.Col(html.Div(children=[html.H1("Grupo 4 - Vendas de Jogos"),
-                                        html.Br(),
-                                        html.H5("(todos os dados estão em milhões de unidades)")])), # H1 = Heading 1, ou cabeçalho
-                        dbc.Col(html.Div(html.Img(src='assets/logo.png')),
-                        )
+                    html.H1('GRUPO 4 - VENDAS DE JOGOS'),
+                    html.H5('(Dados em milhões de unidades)'),
+                    html.Button(id='btn', className='button', children=['PRESS TO START'],
+            n_clicks=0, style=button_style_antes),
+                    
                     ]
-                ),
-                html.Br(),
-                ]
         ),
 
-        html.Main(
+        html.Main(id='graphs', className='graficos',  style=antes_style,
             children=[
                 html.Div(
                     id='graph-1',
@@ -448,6 +481,51 @@ app.layout = html.Div(
     ]
 )
 
+
+
+@app.callback(
+    Output('graphs', 'style'),
+    [Input('btn', 'n_clicks')]
+)
+
+def start_button(n_clicks):
+    if n_clicks >= 1:
+        return depois_style
+    else:
+        return antes_style
+
+@app.callback(
+    Output('btn', 'style'),
+    [Input('btn', 'n_clicks')]
+)
+
+def sumir_botao(n_clicks):
+    if n_clicks >= 1:
+        return button_style_depois
+    else:
+        return button_style_antes
+
+@app.callback(
+    Output('titulo', 'style'),
+    [Input('btn', 'n_clicks')]
+)
+
+def mudar_fonte(n_clicks):
+    if n_clicks >= 1:
+        return fonte_depois
+    else:
+        return fonte_antes
+
+@app.callback(
+    Output('video', 'style'),
+    [Input('btn', 'n_clicks')]
+)
+
+def mudar_video(n_clicks):
+    if n_clicks >=1:
+        return video_depois
+    else:
+        return video_antes
 
 # Rodar o Dash
 # Para ficar mais dinâmico, basta deixar o código rodando apertar Ctrl + S para salvar,
