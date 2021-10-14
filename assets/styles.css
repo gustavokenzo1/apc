@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-weight: lighter;
+}
+.cabecalho {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Uncracked;
+    color: #fff;
+}
+
+.div-principal {
+	height: 100vh;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 250px;
+    font-family: Uncracked;
+    height: 150px;
+    width: 350px;
+    border-radius: 0.8rem;
+    font-size: 55px;
+    border: 3px solid #2f2449;
+    color:white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    background: url('./button7.gif');
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@font-face {
+    font-family: "Uncracked";
+    src: url('./fonts/Uncracked.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: "Virus";
+    src: url('./fonts/virus.ttf') format("truetype");
+}
