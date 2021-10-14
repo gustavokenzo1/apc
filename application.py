@@ -1,4 +1,3 @@
-from dash_html_components.H1 import H1
 from pandas import read_csv # pip install pandas
 
 import dash # pip install dash
