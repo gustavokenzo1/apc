@@ -66,14 +66,17 @@ fig1 = px.bar(x=todos, y=anos_filtro)
 
 fig1.update_layout(
     title='Vendas Globais por Ano',
-    template='plotly_dark',
     xaxis={'title': 'Anos'},
-    yaxis={'title': 'Vendas'}
+    yaxis={'title': 'Vendas'},
+    height=500,
+    paper_bgcolor='rgba(233,233,233,0.3)',
+    plot_bgcolor='rgba(233,233,233,0.3)'
 )
 
 fig1.update_traces(
     hovertemplate='Vendas: %{y} <br> Ano: %{x}'
 )
+
 # ----------------------------------------------------------------------------------
 # Dados 2
 
@@ -153,7 +156,8 @@ fig2['layout']['yaxis2'] = {}
 
 fig2.update_layout(
     title='Vendas por Gêneros',
-    height=800,
+    height=600,
+    width=1050,
     font=dict(
         size=15
     ),
@@ -174,7 +178,8 @@ fig2.update_layout(
         anchor='x2', # Ancorar o título ao eixo x2 do gráfico de linhas
         title='Vendas'
     ),
-    template='plotly_dark'
+    paper_bgcolor='rgba(233,233,233,0.3)',
+    plot_bgcolor='rgba(233,233,233,0.3)'
 )
 
 
@@ -240,11 +245,15 @@ fig3.update_layout(
     title_text = 'Vendas por Região',
     showlegend = True,
     geo = dict(
-        landcolor = 'rgb(217, 217, 217)'
+        landcolor = 'rgba(194, 178, 128, 0.7)'
     ),
-    template='plotly_dark',
     autosize=True,
-    height=700
+    height=500,
+    paper_bgcolor='rgba(233,233,233,0.3)'
+)
+
+fig3.update_geos(
+    showocean=True, oceancolor='rgba(0,71,114, 0.7)'
 )
 
 
@@ -310,8 +319,11 @@ for i in range(len(publicadoras_apenas)):
 fig4.update_traces(hoverinfo='name+y+x')
 
 fig4.update_layout(title='Vendas por Editoras a Cada 5 Anos',
-                   template='plotly_dark', 
-                   hovermode='x unified'
+                   hovermode='x unified',
+                   height=600,
+                   width=880,
+                   paper_bgcolor='rgba(233,233,233,0.3)',
+                   plot_bgcolor='rgba(233,233,233,0.3)'
                    )
 
 # ----------------------------------------------------------------------------------
@@ -367,14 +379,15 @@ fig5 = px.sunburst(
     names='consoles',
     parents='empresas',
     values='vendas',
-    template='plotly_dark',
     title='Vendas por Plataformas das 5 Maiores Empresas'
     
 )
 
 fig5.update_layout(
-    height=800
+    height=800,
+    template='plotly_dark'
 )
+
 """
 Dash
 """
@@ -411,7 +424,7 @@ fonte_antes ={
 
 fonte_depois={
     'font-size': 40,
-    'margin-top': 50,
+    'margin-top': 40,
     'transition': 'font-size 2s ease-in-out, margin-top 2s ease-in-out',
 }
 
@@ -426,31 +439,33 @@ video_durante = {
     'background': 'url(./assets/background2.gif)',
     'height': '100vh',
     'background-position': 'center center',
-    'background-size': 'cover'
+    'background-size': 'cover',
+    'width': '100%'
 }
 
 video_depois = {
-    'background': 'url(./assets/background.gif)',
+    'background': 'url(./assets/wallpaper.jpg)',
     'height': '100vh',
     'background-position': 'center',
     'background-size': 'cover',
-    'transition': 'background 1s ease-in-out',
 }
 
 grupo_antes = {
-    'opacity': 0
+    'opacity': 0,
 }
 
 grupo_durante = {
     'opacity': 1,
-    'margin-top': -680,
-    'transition': 'opacity 1s ease-in-out'
+    'margin-top': -600,
+    'transition': 'opacity 1s ease-in-out',
 }
 
 grupo_depois = {
     'opacity': 0,
     'height': 100,
-    'margin-top': -50
+    'margin-top': -50,
+    'z-index': -2,
+    'transition': 'height 1s ease-in-out'
 }
 
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
@@ -472,31 +487,56 @@ app.layout = html.Div(
                     html.Button(id='btn', className='button', children=['PRESS TO START'],
             n_clicks=0, style=button_style_antes),
                     html.Div(className='grupo', id='fotos', style=grupo_antes, children=[
-                        html.Img(src='./assets/kenzao.png'),
-                        html.Img(src='./assets/gustavao.png'),
+                        html.Div(className='primeira_fila', children=[
+                            html.Div(className='nickname_1', children=['Gustavo Kenzo', html.Br(), '211029343']),
+                            html.Img(src='./assets/gustavoes.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Gustavo Henrique', html.Br(), '211030783']),
+                            html.Img(src='./assets/geovanao.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Geovane', html.Br(), '211031708']),
+                            html.Img(src='./assets/samucao.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Samuel', html.Br(), '211031495']),
+                            html.Img(src='./assets/patrickao.png', style={'height': '260px'}),
+                            html.Div(className='nickname_1', children=['Patrick', html.Br(), '211030620']),
+                        ]),
+                        html.Br(),
+                        html.Div(className='segunda_fila', children=[
+                            html.Div(className='nickname_1', children=['Pedro', html.Br(), '211031468']),
+                            html.Img(src='./assets/pedrao.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Bruno', html.Br(), '211031646']),
+                            html.Img(src='./assets/brunao.png', style={'height': '230px'}),
+                            html.Img(src='./assets/mateusao.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Mateus', html.Br(), '202006484']),
+                            html.Img(src='./assets/nicolao.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Nicolas', html.Br(), '190098244'])
+                        ]),
                         ])
                     ]
         ),
 
         html.Main(id='graphs', className='graficos',  style=antes_style,
             children=[
+
+                html.Div(className='graficos_1', children=[
+                    html.Div(
+                        id='graph-1', className='graph-1',
+                        children=[
+                            html.Br(),
+                            dcc.Graph(figure = fig1)
+                        ]
+                    ),
+                    html.Div(
+                        id='graph-3', className='graph-3',
+                        children=[
+                            dcc.Graph(figure = fig3)
+                        ]
+                    )
+                ]),
+
+                html.Div(className='graficos_2', children=[
                 html.Div(
-                    id='graph-1',
-                    children=[
-                        html.Br(),
-                        dcc.Graph(figure = fig1)
-                    ]
-                ),
-                html.Div(
-                    id='graph-2',
+                    id='graph-2', className='graph-2',
                     children=[
                         dcc.Graph(figure = fig2)
-                    ]
-                ),
-                html.Div(
-                    id='graph-3',
-                    children=[
-                        dcc.Graph(figure = fig3)
                     ]
                 ),
                 html.Div(
@@ -504,7 +544,8 @@ app.layout = html.Div(
                     children=[
                         dcc.Graph(figure = fig4)
                     ]
-                ),
+                )]),
+
                 html.Div(
                     id='graph-5',
                     children=[
@@ -572,8 +613,9 @@ def mudar_video(n_clicks):
 
 @app.callback(
     Output('fotos', 'style'),
-    [Input('btn', 'n_clicks')]
+    [Input('btn', 'n_clicks')],
 )
+
 
 def mudar_fotos(n_clicks):
     if n_clicks == 1:
@@ -584,6 +626,7 @@ def mudar_fotos(n_clicks):
 
     else:
         return grupo_antes
+
 
 # Rodar o Dash
 # Para ficar mais dinâmico, basta deixar o código rodando apertar Ctrl + S para salvar,
