@@ -321,7 +321,7 @@ fig4.update_traces(hoverinfo='name+y+x')
 fig4.update_layout(title='Vendas por Editoras a Cada 5 Anos',
                    hovermode='x unified',
                    height=600,
-                   width=880,
+                   width=856,
                    paper_bgcolor='rgba(233,233,233,0.3)',
                    plot_bgcolor='rgba(233,233,233,0.3)'
                    )
@@ -385,7 +385,8 @@ fig5 = px.sunburst(
 
 fig5.update_layout(
     height=800,
-    template='plotly_dark'
+    paper_bgcolor='rgba(233,233,233,0.3)',
+    plot_bgcolor='rgba(233,233,233,0.3)'
 )
 
 """
@@ -437,17 +438,18 @@ video_antes = {
 
 video_durante = {
     'background': 'url(./assets/background2.gif)',
-    'height': '100vh',
+    'min-height':'100%',
     'background-position': 'center center',
     'background-size': 'cover',
     'width': '100%'
 }
 
 video_depois = {
-    'background': 'url(./assets/wallpaper.jpg)',
-    'height': '100vh',
-    'background-position': 'center',
+    'height': 'auto',
+    'min-height':'100%',
+    'background-position': 'relative',
     'background-size': 'cover',
+    'background': 'url(./assets/wallpaper3.jpg) no-repeat',
 }
 
 grupo_antes = {
@@ -515,7 +517,6 @@ app.layout = html.Div(
 
         html.Main(id='graphs', className='graficos',  style=antes_style,
             children=[
-
                 html.Div(className='graficos_1', children=[
                     html.Div(
                         id='graph-1', className='graph-1',
