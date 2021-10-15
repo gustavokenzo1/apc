@@ -450,6 +450,7 @@ video_depois = {
     'background-position': 'relative',
     'background-size': 'cover',
     'background': 'url(./assets/wallpaper3.jpg) no-repeat',
+    'background-attachment': 'fixed'
 }
 
 grupo_antes = {
