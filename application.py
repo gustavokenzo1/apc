@@ -389,7 +389,16 @@ depois_style = {
 }
 
 button_style_antes = {
-    'display': 'block'
+    'display': 'block',
+    
+}
+
+button_style_durante = {
+    'margin-top': 600,
+    'height': 100,
+    'width': 250,
+    'transition': 'margin 0.5s ease-in-out, height 0.5s ease-in-out, width 0.5s ease-in-out',
+    'z-index': 100
 }
 
 button_style_depois = {
@@ -401,14 +410,22 @@ fonte_antes ={
 }
 
 fonte_depois={
-    'font-size': 30,
-    'transition': 'font-size 2s ease-in-out',
+    'font-size': 40,
+    'margin-top': 50,
+    'transition': 'font-size 2s ease-in-out, margin-top 2s ease-in-out',
 }
 
 video_antes = {
-    'background': 'url(./assets/background5.gif)',
+    'background': 'url(./assets/background.gif)',
     'height': '100vh',
     'background-position': 'center',
+    'background-size': 'cover'
+}
+
+video_durante = {
+    'background': 'url(./assets/background2.gif)',
+    'height': '100vh',
+    'background-position': 'center center',
     'background-size': 'cover'
 }
 
@@ -418,6 +435,22 @@ video_depois = {
     'background-position': 'center',
     'background-size': 'cover',
     'transition': 'background 1s ease-in-out',
+}
+
+grupo_antes = {
+    'opacity': 0
+}
+
+grupo_durante = {
+    'opacity': 1,
+    'margin-top': -680,
+    'transition': 'opacity 1s ease-in-out'
+}
+
+grupo_depois = {
+    'opacity': 0,
+    'height': 100,
+    'margin-top': -50
 }
 
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
@@ -438,7 +471,10 @@ app.layout = html.Div(
                     html.H5('(Dados em milhões de unidades)'),
                     html.Button(id='btn', className='button', children=['PRESS TO START'],
             n_clicks=0, style=button_style_antes),
-                    
+                    html.Div(className='grupo', id='fotos', style=grupo_antes, children=[
+                        html.Img(src='./assets/kenzao.png'),
+                        html.Img(src='./assets/gustavao.png'),
+                        ])
                     ]
         ),
 
@@ -488,7 +524,7 @@ app.layout = html.Div(
 )
 
 def start_button(n_clicks):
-    if n_clicks >= 1:
+    if n_clicks >= 2:
         return depois_style
     else:
         return antes_style
@@ -499,8 +535,12 @@ def start_button(n_clicks):
 )
 
 def sumir_botao(n_clicks):
-    if n_clicks >= 1:
+    if n_clicks == 1:
+        return button_style_durante
+
+    elif n_clicks > 1:
         return button_style_depois
+
     else:
         return button_style_antes
 
@@ -510,7 +550,7 @@ def sumir_botao(n_clicks):
 )
 
 def mudar_fonte(n_clicks):
-    if n_clicks >= 1:
+    if n_clicks >= 2:
         return fonte_depois
     else:
         return fonte_antes
@@ -521,10 +561,29 @@ def mudar_fonte(n_clicks):
 )
 
 def mudar_video(n_clicks):
-    if n_clicks >=1:
+    if n_clicks == 1:
+        return video_durante
+    
+    elif n_clicks > 1:
         return video_depois
+        
     else:
         return video_antes
+
+@app.callback(
+    Output('fotos', 'style'),
+    [Input('btn', 'n_clicks')]
+)
+
+def mudar_fotos(n_clicks):
+    if n_clicks == 1:
+        return grupo_durante
+
+    elif n_clicks > 1:
+        return grupo_depois
+
+    else:
+        return grupo_antes
 
 # Rodar o Dash
 # Para ficar mais dinâmico, basta deixar o código rodando apertar Ctrl + S para salvar,
