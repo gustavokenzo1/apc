@@ -9,7 +9,8 @@
     justify-content: center;
     align-items: center;
     font-family: Uncracked;
-    color: #fff;
+    color: rgb(255, 255, 255);
+    width: 100%;
 }
 
 .div-principal {
@@ -26,20 +27,61 @@
     width: 350px;
     border-radius: 0.8rem;
     font-size: 55px;
-    border: 3px solid #2f2449;
+    border: 5px solid #2f2449;
     color:white;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     background: url('./button7.gif');
     position: relative;
-    z-index: 2;
+    z-index: 3;
 }
 
 .grupo {
-    display: flex;
     position: relative;
     justify-content: space-around;
     align-items: center;
     z-index: 1;
+}
+
+.primeira_fila {
+    display: flex;
+    justify-content: center;
+    margin-top: -40px;
+}
+
+.segunda_fila {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.graficos_1 {
+    display: flex;
+    justify-content: space-around;
+}
+
+.graph-1 {
+    width: 50%;
+    height: 400;
+    margin-top: -18px;
+}
+
+.graph-3 {
+    width: 50%;
+    height: 400;
+}
+
+.graficos_2 {
+    display: flex;
+    justify-content: space-around;
+}
+
+.graph-2 {
+    width: 75%;
+}
+
+.graficos {
+    position: relative;
+    z-index: 2;
 }
 
 @keyframes gradient {
@@ -54,12 +96,8 @@
 	}
 }
 
+
 @font-face {
     font-family: "Uncracked";
     src: url('./fonts/Uncracked.ttf') format("truetype");
-}
-
-@font-face {
-    font-family: "Virus";
-    src: url('./fonts/virus.ttf') format("truetype");
 }
