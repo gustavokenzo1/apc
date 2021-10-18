@@ -69,8 +69,10 @@ fig1.update_layout(
     xaxis={'title': 'Anos'},
     yaxis={'title': 'Vendas'},
     height=500,
-    paper_bgcolor='rgba(233,233,233,0.3)',
-    plot_bgcolor='rgba(233,233,233,0.3)'
+    paper_bgcolor='rgba(233,233,233,0)',
+    plot_bgcolor='rgba(20,20,20,0.3)',
+    font_color = 'white',
+    font_size=17
 )
 
 fig1.update_traces(
@@ -159,7 +161,7 @@ fig2.update_layout(
     height=600,
     width=1050,
     font=dict(
-        size=15
+        size=17
     ),
     margin=dict(
         t=75,
@@ -178,8 +180,9 @@ fig2.update_layout(
         anchor='x2', # Ancorar o título ao eixo x2 do gráfico de linhas
         title='Vendas'
     ),
-    paper_bgcolor='rgba(233,233,233,0.3)',
-    plot_bgcolor='rgba(233,233,233,0.3)'
+    paper_bgcolor='rgba(233,233,233,0)',
+    plot_bgcolor='rgba(20,20,20,0.3)',
+    font_color = 'white'
 )
 
 
@@ -249,7 +252,9 @@ fig3.update_layout(
     ),
     autosize=True,
     height=500,
-    paper_bgcolor='rgba(233,233,233,0.3)'
+    paper_bgcolor='rgba(233,233,233,0)',
+    font_color = 'white',
+    font_size=17
 )
 
 fig3.update_geos(
@@ -322,8 +327,10 @@ fig4.update_layout(title='Vendas por Editoras a Cada 5 Anos',
                    hovermode='x unified',
                    height=600,
                    width=856,
-                   paper_bgcolor='rgba(233,233,233,0.3)',
-                   plot_bgcolor='rgba(233,233,233,0.3)'
+                   paper_bgcolor='rgba(233,233,233,0)',
+                   plot_bgcolor='rgba(20,20,20,0.3)',
+                   font_color = 'white',
+                   font_size=17
                    )
 
 # ----------------------------------------------------------------------------------
@@ -385,8 +392,10 @@ fig5 = px.sunburst(
 
 fig5.update_layout(
     height=800,
-    paper_bgcolor='rgba(233,233,233,0.3)',
-    plot_bgcolor='rgba(233,233,233,0.3)'
+    paper_bgcolor='rgba(233,233,233,0)',
+    plot_bgcolor='rgba(20,20,20,0.3)',
+    font_color = 'white',
+    font_size=17
 )
 
 """
@@ -399,7 +408,7 @@ antes_style = {
 
 depois_style = {
     'opacity': 1,
-    'transition': 'opacity 1.5s ease-in-out'
+    'transition': 'opacity 3s ease-in-out'
 }
 
 button_style_antes = {
@@ -430,14 +439,14 @@ fonte_depois={
 }
 
 video_antes = {
-    'background': 'url(./assets/background.gif)',
+    'background': 'url(./assets/background2.gif)',
     'height': '100vh',
     'background-position': 'center',
     'background-size': 'cover'
 }
 
 video_durante = {
-    'background': 'url(./assets/background2.gif)',
+    'background': 'url(./assets/background.gif)',
     'min-height':'100%',
     'background-position': 'center center',
     'background-size': 'cover',
@@ -447,10 +456,12 @@ video_durante = {
 video_depois = {
     'height': 'auto',
     'min-height':'100%',
-    'background-position': 'relative',
+    'width': 'auto',
+    'background-position': 'center',
     'background-size': 'cover',
-    'background': 'url(./assets/wallpaper3.jpg) no-repeat',
-    'background-attachment': 'fixed'
+    'background': 'url(./assets/wallpaper2.png) no-repeat',
+    'background-attachment': 'fixed',
+    'transition': 'background 3s ease-in-out'
 }
 
 grupo_antes = {
@@ -460,7 +471,7 @@ grupo_antes = {
 grupo_durante = {
     'opacity': 1,
     'margin-top': -600,
-    'transition': 'opacity 1s ease-in-out',
+    'transition': 'opacity 3s ease-in-out',
 }
 
 grupo_depois = {
@@ -468,7 +479,7 @@ grupo_depois = {
     'height': 100,
     'margin-top': -50,
     'z-index': -2,
-    'transition': 'height 1s ease-in-out'
+    'transition': 'height 2s ease-in-out'
 }
 
 # Quando for testar com o Dash, selecionar tudo entre as aspas triplas e apertar Alt + Shift + A para des-comentar
@@ -491,26 +502,44 @@ app.layout = html.Div(
             n_clicks=0, style=button_style_antes),
                     html.Div(className='grupo', id='fotos', style=grupo_antes, children=[
                         html.Div(className='primeira_fila', children=[
-                            html.Div(className='nickname_1', children=['Gustavo Kenzo', html.Br(), '211029343']),
-                            html.Img(src='./assets/gustavoes.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Gustavo Henrique', html.Br(), '211030783']),
+
+                            html.Img(src='./assets/brunao.png', style={'height': '230px'}),
+                            html.Div(className='nickname_1', children=['Bruno', html.Br(), '211031646']),
+
+                            html.Img(src='./assets/filipao.png', style={'height': '240px'}),
+                            html.Div(className='nickname_1', children=['Filipe', html.Br(), '211030747']),
+
                             html.Img(src='./assets/geovanao.png', style={'height': '230px'}),
                             html.Div(className='nickname_1', children=['Geovane', html.Br(), '211031708']),
+
                             html.Img(src='./assets/samucao.png', style={'height': '230px'}),
                             html.Div(className='nickname_1', children=['Samuel', html.Br(), '211031495']),
+
                             html.Img(src='./assets/patrickao.png', style={'height': '260px'}),
                             html.Div(className='nickname_1', children=['Patrick', html.Br(), '211030620']),
                         ]),
                         html.Br(),
-                        html.Div(className='segunda_fila', children=[
-                            html.Div(className='nickname_1', children=['Pedro', html.Br(), '211031468']),
-                            html.Img(src='./assets/pedrao.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Bruno', html.Br(), '211031646']),
-                            html.Img(src='./assets/brunao.png', style={'height': '230px'}),
-                            html.Img(src='./assets/mateusao.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Mateus', html.Br(), '202006484']),
-                            html.Img(src='./assets/nicolao.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Nicolas', html.Br(), '190098244'])
+                        html.Div(style={'font-size':40}, className='segunda_fila', children=[
+                            html.Div(children=[
+                                html.Div(className='nickname_1', children=['Pedro', html.Br(), '211031468']),
+                                html.Img(src='./assets/pedrao.png', style={'height': '230px'}),
+                            ]),
+                            html.Div(children=[
+                                html.Div(className='nickname_1', children=['Teodoro', html.Br(), '150149328 ']),
+                                html.Img(src='./assets/teodorao.png', style={'height': '230px'}),
+                            ]),
+                            html.Div(children=[
+                                html.Div(className='nickname_1', children=['Gustavo Kenzo / ', 'Gustavo Henrique', html.Br(), '211029343 / ', '211030783']),
+                                html.Img(src='./assets/gustavoes.png', style={'height': '240px'}),
+                            ]),
+                            html.Div(children=[
+                                html.Div(className='nickname_1', children=['Mateus', html.Br(), '202006484']),
+                                html.Img(src='./assets/mateusao.png', style={'height': '230px'}),
+                            ]),
+                            html.Div(children=[
+                                html.Div(className='nickname_1', children=['Nicolas', html.Br(), '190098244']),
+                                html.Img(src='./assets/nicolao.png', style={'height': '230px'}),
+                            ]),
                         ]),
                         ])
                     ]
@@ -535,18 +564,18 @@ app.layout = html.Div(
                 ]),
 
                 html.Div(className='graficos_2', children=[
-                html.Div(
-                    id='graph-2', className='graph-2',
-                    children=[
-                        dcc.Graph(figure = fig2)
-                    ]
-                ),
-                html.Div(
-                    id='graph-4',
-                    children=[
-                        dcc.Graph(figure = fig4)
-                    ]
-                )]),
+                    html.Div(
+                        id='graph-2', className='graph-2',
+                        children=[
+                            dcc.Graph(figure = fig2)
+                        ]
+                    ),
+                    html.Div(
+                        id='graph-4',
+                        children=[
+                            dcc.Graph(figure = fig4)
+                        ]
+                    )]),
 
                 html.Div(
                     id='graph-5',
