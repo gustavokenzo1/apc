@@ -4,6 +4,8 @@ Feito em conjunto pelos estudantes:
 
 Obs: Baixar o GIF do wallpaper no link: https://drive.google.com/file/d/1hHZE65-Oe5HoukjTjAJmztqNfekq0X6l/view?usp=sharing e trocar o nome para 'background.png', pois o GitHub é fresco e não aguenta 25mb+
 
+# 
+
 211030783 - gustavo henrique rodrigues de sousa
 
 211029343 - gustavo kenzo araki takechi
