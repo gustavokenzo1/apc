@@ -1,14 +1,14 @@
-from pandas import read_csv # pip install pandas
+from pandas import read_csv  # pip install pandas
 
-import dash # pip install dash
-import dash_core_components as dcc # pip install dash-core-components
-import dash_html_components as html # pip install dash-html-components
-import dash_bootstrap_components as dbc # pip install dash-boostrap-components
+import dash  # pip install dash
+import dash_core_components as dcc  # pip install dash-core-components
+import dash_html_components as html  # pip install dash-html-components
+import dash_bootstrap_components as dbc  # pip install dash-boostrap-components
 from dash.dependencies import Input, Output
 
-import plotly.express as px #pip install plotly
+import plotly.express as px  # pip install plotly
 import plotly.graph_objects as go
-import plotly.figure_factory as ff # Gráfico 2
+import plotly.figure_factory as ff  # Gráfico 2
 
 # [X] Gráfico 1: Vendas de qualquer jogo a cada ano - Bar Charts
 # [X] Gráfico 2: Vendas por gêneros - Figure Factory Subplots
@@ -19,11 +19,9 @@ import plotly.figure_factory as ff # Gráfico 2
 # Dados começam em 1980 e terminam em 2016
 
 # Usar o pandas apenas para ler o arquivo csv
-df = read_csv("vgsales.csv")
+df = read_csv("./data/vgsales.csv")
 # Pegar cada jogo e transformar todos os seus dados em um item de uma lista chamada df_array
 df_array = df.values
-
-
 
 
 """
@@ -54,36 +52,20 @@ todos = []
 
 # Loop de 1980 a 2016
 for i in range(1980, 2016):
-    # O total de cada ano vai ser quantos itens com o mesmo ano iguais existem 
+    # O total de cada ano vai ser quantos itens com o mesmo ano iguais existem
     total_ano = anos.count(i)
     # Guardar na lista
     anos_filtro.append(total_ano)
     todos.append(i)
 
-
-# Gráfico 1
-fig1 = px.bar(x=todos, y=anos_filtro)
-
-fig1.update_layout(
-    title='Vendas Globais por Ano',
-    xaxis={'title': 'Anos'},
-    yaxis={'title': 'Vendas'},
-    height=500,
-    paper_bgcolor='rgba(233,233,233,0)',
-    plot_bgcolor='rgba(20,20,20,0.3)',
-    font_color = 'white',
-    font_size=17
-)
-
-fig1.update_traces(
-    hovertemplate='Vendas: %{y} <br> Ano: %{x}'
-)
+order = ['Crescente', 'Decrescente', 'Cronológico']
 
 # ----------------------------------------------------------------------------------
 # Dados 2
 
 generos = []
-todos_generos= ['Esportes', 'Corrida', 'RPG', 'Puzzle', 'Diversos', 'Tiro', 'Simulação', 'Ação']
+todos_generos = ['Esportes', 'Corrida', 'RPG',
+                 'Puzzle', 'Diversos', 'Tiro', 'Simulação', 'Ação']
 # Gêneros mais populares:
 # Sports, Racing, Role-Playing, Puzzle, Misc, Shooter, Simulation, Action
 
@@ -105,7 +87,7 @@ for linha in df_array:
         puzzle += linha[10]
 
     elif linha[4] == 'Misc':
-        misc += linha[10]                     
+        misc += linha[10]
 
     elif linha[4] == 'Shooter':
         fps += linha[10]
@@ -116,7 +98,7 @@ for linha in df_array:
     elif linha[4] == 'Action':
         action += linha[10]
 
-# Guardar o número de vendas numa array para usar no gráfico de linhas 
+# Guardar o número de vendas numa array para usar no gráfico de linhas5,
 generos.append(sports)
 generos.append(racing)
 generos.append(rpg)
@@ -126,31 +108,31 @@ generos.append(fps)
 generos.append(sim)
 generos.append(action)
 
-generos = [ int(genero) for genero in generos]
+generos = [int(genero) for genero in generos]
 
 # Criação da tabela
 # A primeira linha indica o nome de cada coluna
 # As linhas seguintes associam o nome do gênero ao número de vendas
 
 tabela = [['Gênero', 'Vendas'],
-            ['Esportes', generos[0]],
-            ['Corrida', generos[1]],
-            ['RPG', generos[2]],
-            ['Puzzle', generos[3]],
-            ['Diversos', generos[4]],
-            ['Tiro', generos[5]],
-            ['Simulação', generos[6]],
-            ['Ação', generos[7]]]
+          ['Esportes', generos[0]],
+          ['Corrida', generos[1]],
+          ['RPG', generos[2]],
+          ['Puzzle', generos[3]],
+          ['Diversos', generos[4]],
+          ['Tiro', generos[5]],
+          ['Simulação', generos[6]],
+          ['Ação', generos[7]]]
 
 
 # Gráfico 2
 # ff foi importado para criar tabela
 fig2 = ff.create_table(tabela)
 
-fig2.add_trace(go.Scatter(x=todos_generos, y=generos, 
-                        xaxis='x2', yaxis='y2',
-                        marker=dict(color='#9400d3'),
-                        name='Vendas Globais'))
+fig2.add_trace(go.Scatter(x=todos_generos, y=generos,
+                          xaxis='x2', yaxis='y2',
+                          marker=dict(color='#9400d3'),
+                          name='Vendas Globais'))
 
 # Inicializar eixos x e y
 fig2['layout']['xaxis2'] = {}
@@ -170,19 +152,20 @@ fig2.update_layout(
         b=75
     ),
     xaxis=dict(
-        domain=[0, 0.5] # Comprimento da tabela (0.5 significa que ocupa metade do espaço)
+        # Comprimento da tabela (0.5 significa que ocupa metade do espaço)
+        domain=[0, 0.5]
     ),
     xaxis2=dict(
         anchor='y2',
-        domain=[.6, 1] # Altera a largura do gráfico de linhas
+        domain=[.6, 1]  # Altera a largura do gráfico de linhas
     ),
     yaxis2=dict(
-        anchor='x2', # Ancorar o título ao eixo x2 do gráfico de linhas
+        anchor='x2',  # Ancorar o título ao eixo x2 do gráfico de linhas
         title='Vendas'
     ),
     paper_bgcolor='rgba(233,233,233,0)',
     plot_bgcolor='rgba(20,20,20,0.3)',
-    font_color = 'white'
+    font_color='white'
 )
 
 
@@ -223,37 +206,37 @@ scale = 70
 
 for i in range(len(regions)):
     fig3.add_trace(go.Scattergeo(
-                    lon = (long[i],lat),
-                    lat = (lat[i],long),
-                    marker = dict(
-                        # Tamanho de cada bolha
-                        size = vendas_3[i]/scale,
-                        # 'i'ésima cor da lista
-                        color = cores[i],
-                        # Mudar a opacidade de acordo com a quantidade de vendas
-                        opacity=1-0.15*i,
-                        # Contorno da bolha
-                        line_color = 'rgb(80,80,80)',
-                        # Expessura do contorno em pixels
-                        line_width = 1,
-                        sizemode = 'area'
-                    ),
-                    # Nomes na legenda
-                    name = '{0}'.format(regions[i]),
-                    # Quando passar o mouse em cima, aparecer legenda formatada
-                    hovertemplate='Vendas: {0}'.format(vendas_3[i])
+        lon=(long[i], lat),
+        lat=(lat[i], long),
+        marker=dict(
+            # Tamanho de cada bolha
+            size=vendas_3[i]/scale,
+            # 'i'ésima cor da lista
+            color=cores[i],
+            # Mudar a opacidade de acordo com a quantidade de vendas
+            opacity=1-0.15*i,
+            # Contorno da bolha
+            line_color='rgb(80,80,80)',
+            # Expessura do contorno em pixels
+            line_width=1,
+            sizemode='area'
+        ),
+        # Nomes na legenda
+        name='{0}'.format(regions[i]),
+        # Quando passar o mouse em cima, aparecer legenda formatada
+        hovertemplate='Vendas: {0}'.format(vendas_3[i])
     ))
 
 fig3.update_layout(
-    title_text = 'Vendas por Região',
-    showlegend = True,
-    geo = dict(
-        landcolor = 'rgba(194, 178, 128, 0.7)'
+    title_text='Vendas por Região',
+    showlegend=True,
+    geo=dict(
+        landcolor='rgba(194, 178, 128, 0.7)'
     ),
     autosize=True,
     height=500,
     paper_bgcolor='rgba(233,233,233,0)',
-    font_color = 'white',
+    font_color='white',
     font_size=17
 )
 
@@ -262,12 +245,12 @@ fig3.update_geos(
 )
 
 
-
 # ----------------------------------------------------------------------------------
 # Dados 4
 
 # 5 Publicadoras que mais publicaram e não fabricam consoles
-publicadoras_apenas = ['Electronic Arts', 'Activision', 'Namco Bandai Games', 'Ubisoft', 'Konami Digital Entertainment']
+publicadoras_apenas = ['Electronic Arts', 'Activision',
+                       'Namco Bandai Games', 'Ubisoft', 'Konami Digital Entertainment']
 
 anos_4 = []
 ubisoft = []
@@ -293,7 +276,7 @@ for i in range(1980, 2016, 5):
 
         elif linha[5] == 'Activision' and linha[3] == float(i):
             activision_ += linha[10]
-                
+
         elif linha[5] == 'Take-Two Interactive' and linha[3] == float(i):
             take_two_ += linha[10]
 
@@ -306,7 +289,7 @@ for i in range(1980, 2016, 5):
     take_two.append(take_two_)
     bandai_namco.append(bandai_namco_)
 
-# publicadoras_4 é uma lista de listas 
+# publicadoras_4 é uma lista de listas
 publicadoras_4 = []
 publicadoras_4.append(ubisoft)
 publicadoras_4.append(ea)
@@ -319,7 +302,8 @@ publicadoras_4.append(bandai_namco)
 fig4 = go.Figure()
 
 for i in range(len(publicadoras_apenas)):
-    fig4.add_trace(go.Scatter(x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
+    fig4.add_trace(go.Scatter(
+        x=anos_4, y=publicadoras_4[i - 1], mode='lines+markers', name=publicadoras_apenas[i - 1]))
 
 fig4.update_traces(hoverinfo='name+y+x')
 
@@ -329,8 +313,9 @@ fig4.update_layout(title='Vendas por Editoras a Cada 5 Anos',
                    width=856,
                    paper_bgcolor='rgba(233,233,233,0)',
                    plot_bgcolor='rgba(20,20,20,0.3)',
-                   font_color = 'white',
-                   font_size=17
+                   font_color='white',
+                   font_size=17,
+                   hoverlabel=dict(bgcolor='rgb(0,0,0)')
                    )
 
 # ----------------------------------------------------------------------------------
@@ -365,7 +350,7 @@ ng = plataforma.count('NG')
 # Cada empresa engloba seus consoles
 snk = ng
 nintendo = nes + n64 + gb + wii
-microsoft = x360 + xone 
+microsoft = x360 + xone
 sony = ps3 + ps4 + ps2 + psp
 plataforma = sony + microsoft + computador + nintendo + atari + snk
 
@@ -374,10 +359,12 @@ plataforma = sony + microsoft + computador + nintendo + atari + snk
 # Em empresas, colocar "plataforma" nas mesmas posições em que existe uma empresa na lista acima e,
 # em seguida, colocar o nome da empresa na mesma posição de cada console dessa empresa
 # Em vendas, colocar o valor de vendas, que vai determinar o tamanho de cada setor do gráfico
-data = dict (
-    consoles = ['Plataforma', 'Sony', 'Microsoft', 'PC', 'Nintendo', 'Atari', 'SNK', 'PlayStation 3', 'Computador', 'PlayStation 4', 'NES', 'PlayStation 2', 'Xbox 360', 'Nintendo 64', 'Xbox One', 'PSP', 'GameBoy', 'Atari2600', 'Nintendo Wii' , 'NeoGeo'],
-    empresas = ['', 'Plataforma', 'Plataforma','Plataforma','Plataforma','Plataforma','Plataforma', 'Sony', 'PC', 'Sony', 'Nintendo', 'Sony', 'Microsoft', 'Nintendo', 'Microsoft', 'Sony', 'Nintendo', 'Atari', 'Nintendo', 'SNK' ],
-    vendas = [plataforma, sony, microsoft, computador, nintendo, atari, snk, ps3, computador, ps4, nes, ps2, x360, n64, xone, psp, gb, atari, wii, ng]) 
+data = dict(
+    consoles=['Plataforma', 'Sony', 'Microsoft', 'PC', 'Nintendo', 'Atari', 'SNK', 'PlayStation 3', 'Computador', 'PlayStation 4',
+              'NES', 'PlayStation 2', 'Xbox 360', 'Nintendo 64', 'Xbox One', 'PSP', 'GameBoy', 'Atari2600', 'Nintendo Wii', 'NeoGeo'],
+    empresas=['', 'Plataforma', 'Plataforma', 'Plataforma', 'Plataforma', 'Plataforma', 'Plataforma', 'Sony', 'PC',
+              'Sony', 'Nintendo', 'Sony', 'Microsoft', 'Nintendo', 'Microsoft', 'Sony', 'Nintendo', 'Atari', 'Nintendo', 'SNK'],
+    vendas=[plataforma, sony, microsoft, computador, nintendo, atari, snk, ps3, computador, ps4, nes, ps2, x360, n64, xone, psp, gb, atari, wii, ng])
 
 
 # Gráfico 5
@@ -387,14 +374,14 @@ fig5 = px.sunburst(
     parents='empresas',
     values='vendas',
     title='Vendas por Plataformas das 5 Maiores Empresas'
-    
+
 )
 
 fig5.update_layout(
     height=800,
     paper_bgcolor='rgba(233,233,233,0)',
     plot_bgcolor='rgba(20,20,20,0.3)',
-    font_color = 'white',
+    font_color='white',
     font_size=17
 )
 
@@ -413,11 +400,11 @@ depois_style = {
 
 button_style_antes = {
     'display': 'block',
-    
+
 }
 
 button_style_durante = {
-    'margin-top': 600,
+    'margin-top': '60vh',
     'height': 100,
     'width': 250,
     'transition': 'margin 0.5s ease-in-out, height 0.5s ease-in-out, width 0.5s ease-in-out',
@@ -428,13 +415,13 @@ button_style_depois = {
     'display': 'none'
 }
 
-fonte_antes ={
+fonte_antes = {
     'font-size': 50,
 }
 
-fonte_depois={
+fonte_depois = {
     'font-size': 40,
-    'margin-top': 40,
+    'margin-top': '5vh',
     'transition': 'font-size 2s ease-in-out, margin-top 2s ease-in-out',
 }
 
@@ -447,7 +434,7 @@ video_antes = {
 
 video_durante = {
     'background': 'url(./assets/background.gif)',
-    'min-height':'100%',
+    'min-height': '100%',
     'background-position': 'center center',
     'background-size': 'cover',
     'width': '100%'
@@ -455,7 +442,7 @@ video_durante = {
 
 video_depois = {
     'height': 'auto',
-    'min-height':'100%',
+    'min-height': '100%',
     'width': 'auto',
     'background-position': 'center',
     'background-size': 'cover',
@@ -470,7 +457,7 @@ grupo_antes = {
 
 grupo_durante = {
     'opacity': 1,
-    'margin-top': -600,
+    'margin-top': '-60vh',
     'transition': 'opacity 3s ease-in-out',
 }
 
@@ -494,118 +481,193 @@ app.layout = html.Div(
     className='div-principal', id='video', style=video_antes,
     children=[
         html.Br(),
-        html.Div(className='cabecalho', id='titulo', style= fonte_antes,
-            children=[
-                    html.H1('GRUPO 4 - VENDAS DE JOGOS'),
-                    html.H5('(Dados em milhões de unidades)'),
-                    html.Button(id='btn', className='button', children=['PRESS TO START'],
-            n_clicks=0, style=button_style_antes),
-                    html.Div(className='grupo', id='fotos', style=grupo_antes, children=[
-                        html.Div(className='primeira_fila', children=[
+        html.Div(className='cabecalho', id='titulo', style=fonte_antes,
+                 children=[
+                     html.H1('GRUPO 4 - VENDAS DE JOGOS'),
+                     html.H5('(Dados em milhões de unidades)'),
+                     html.Button(id='btn', className='button', children=['PRESS TO START'],
+                                 n_clicks=0, style=button_style_antes),
+                     html.Div(className='grupo', id='fotos', style=grupo_antes, children=[
+                         html.Div(className='primeira_fila', children=[
 
-                            html.Img(src='./assets/brunao.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Bruno', html.Br(), '211031646']),
+                             html.Img(src='./assets/brunao.png',
+                                      style={'height': '230px'}),
+                             html.Div(className='nickname_1', children=[
+                                 'Bruno', html.Br(), '211031646']),
 
-                            html.Img(src='./assets/filipao.png', style={'height': '240px'}),
-                            html.Div(className='nickname_1', children=['Filipe', html.Br(), '211030747']),
+                             html.Img(src='./assets/filipao.png',
+                                      style={'height': '240px'}),
+                             html.Div(className='nickname_1', children=[
+                                 'Filipe', html.Br(), '211030747']),
 
-                            html.Img(src='./assets/geovanao.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Geovane', html.Br(), '211031708']),
+                             html.Img(src='./assets/geovanao.png',
+                                      style={'height': '230px'}),
+                             html.Div(className='nickname_1', children=[
+                                 'Geovane', html.Br(), '211031708']),
 
-                            html.Img(src='./assets/samucao.png', style={'height': '230px'}),
-                            html.Div(className='nickname_1', children=['Samuel', html.Br(), '211031495']),
+                             html.Img(src='./assets/samucao.png',
+                                      style={'height': '230px'}),
+                             html.Div(className='nickname_1', children=[
+                                 'Samuel', html.Br(), '211031495']),
 
-                            html.Img(src='./assets/patrickao.png', style={'height': '260px'}),
-                            html.Div(className='nickname_1', children=['Patrick', html.Br(), '211030620']),
-                        ]),
-                        html.Br(),
-                        html.Div(style={'font-size':40}, className='segunda_fila', children=[
-                            html.Div(children=[
-                                html.Div(className='nickname_1', children=['Pedro', html.Br(), '211031468']),
-                                html.Img(src='./assets/pedrao.png', style={'height': '230px'}),
-                            ]),
-                            html.Div(children=[
-                                html.Div(className='nickname_1', children=['Teodoro', html.Br(), '150149328 ']),
-                                html.Img(src='./assets/teodorao.png', style={'height': '230px'}),
-                            ]),
-                            html.Div(children=[
-                                html.Div(className='nickname_1', children=['Gustavo Kenzo / ', 'Gustavo Henrique', html.Br(), '211029343 / ', '211030783']),
-                                html.Img(src='./assets/gustavoes.png', style={'height': '240px'}),
-                            ]),
-                            html.Div(children=[
-                                html.Div(className='nickname_1', children=['Mateus', html.Br(), '202006484']),
-                                html.Img(src='./assets/mateusao.png', style={'height': '230px'}),
-                            ]),
-                            html.Div(children=[
-                                html.Div(className='nickname_1', children=['Nicolas', html.Br(), '190098244']),
-                                html.Img(src='./assets/nicolao.png', style={'height': '230px'}),
-                            ]),
-                        ]),
-                        ])
-                    ]
-        ),
+                             html.Img(src='./assets/patrickao.png',
+                                      style={'height': '260px'}),
+                             html.Div(className='nickname_1', children=[
+                                 'Patrick', html.Br(), '211030620']),
+                         ]),
+                         html.Br(),
+                         html.Div(style={'font-size': 40}, className='segunda_fila', children=[
+                             html.Div(children=[
+                                 html.Div(className='nickname_1', children=[
+                                     'Pedro', html.Br(), '211031468']),
+                                 html.Img(src='./assets/pedrao.png',
+                                          style={'height': '230px'}),
+                             ]),
+                             html.Div(children=[
+                                 html.Div(className='nickname_1', children=[
+                                     'Teodoro', html.Br(), '150149328 ']),
+                                 html.Img(src='./assets/teodorao.png',
+                                          style={'height': '230px'}),
+                             ]),
+                             html.Div(children=[
+                                 html.Div(className='nickname_1', children=[
+                                     'Gustavo Kenzo / ', 'Gustavo Henrique', html.Br(), '211029343 / ', '211030783']),
+                                 html.Img(src='./assets/gustavoes.png',
+                                          style={'height': '240px'}),
+                             ]),
+                             html.Div(children=[
+                                 html.Div(className='nickname_1', children=[
+                                     'Mateus', html.Br(), '202006484']),
+                                 html.Img(src='./assets/mateusao.png',
+                                          style={'height': '230px'}),
+                             ]),
+                             html.Div(children=[
+                                 html.Div(className='nickname_1', children=[
+                                     'Nicolas', html.Br(), '190098244']),
+                                 html.Img(src='./assets/nicolao.png',
+                                          style={'height': '230px'}),
+                             ]),
+                         ]),
+                     ])
+                 ]
+                 ),
 
         html.Main(id='graphs', className='graficos',  style=antes_style,
-            children=[
-                html.Div(className='graficos_1', children=[
-                    html.Div(
-                        id='graph-1', className='graph-1',
-                        children=[
-                            html.Br(),
-                            dcc.Graph(figure = fig1)
-                        ]
-                    ),
-                    html.Div(
-                        id='graph-3', className='graph-3',
-                        children=[
-                            dcc.Graph(figure = fig3)
-                        ]
-                    )
-                ]),
+                  children=[
+                      html.Div(className='graficos_1', children=[
+                          html.Div(
+                              className='graph-1',
+                              children=[
+                                  html.Br(),
+                                  dcc.Dropdown(id='drop1', className='dropdown',
+                                               options=[{'label': str(j), 'value': j}
+                                                        for j in order],
+                                               value='Cronológico'),
+                                  dcc.Graph(id='graph1')
+                              ]
+                          ),
+                          html.Div(
+                              id='graph-3', className='graph-3',
+                              children=[
+                                  dcc.Graph(figure=fig3)
+                              ]
+                          )
+                      ]),
 
-                html.Div(className='graficos_2', children=[
-                    html.Div(
-                        id='graph-2', className='graph-2',
-                        children=[
-                            dcc.Graph(figure = fig2)
-                        ]
-                    ),
-                    html.Div(
-                        id='graph-4',
-                        children=[
-                            dcc.Graph(figure = fig4)
-                        ]
-                    )]),
+                      html.Div(className='graficos_2', children=[
+                          html.Div(
+                              id='graph-2', className='graph-2',
+                              children=[
+                                  dcc.Graph(figure=fig2)
+                              ]
+                          ),
+                          html.Div(
+                              id='graph-4',
+                              children=[
+                                  dcc.Graph(figure=fig4)
+                              ]
+                          )]),
 
-                html.Div(
-                    id='graph-5',
-                    children=[
-                        dcc.Graph(figure = fig5)
-                    ]
-                )
-            ]
-        )
+                      html.Div(
+                          id='graph-5',
+                          children=[
+                              dcc.Graph(figure=fig5)
+                          ]
+                      )
+                  ]
+                  )
     ]
 )
 
+
+@app.callback(
+    Output('graph1', 'figure'),
+    [Input('drop1', 'value')]
+)
+def update_graph_1(drop1):
+    ordem = anos_filtro
+    vendas_anos_crescente = []
+
+    if drop1 == 'Crescente':
+        ordem = sorted(anos_filtro)
+
+        # TODO
+        for i in range(36):
+            menor = min(anos_filtro)
+            ano = 0
+            for j in range(36):
+                if anos_filtro[j] == menor:
+                    ano = todos[j]
+            vendas_anos_crescente.append(ano)
+            anos_filtro.pop(menor)
+
+        ordem_anos = vendas_anos_crescente
+
+        ordem_anos = todos
+
+    elif drop1 == 'Decrescente':
+        ordem = sorted(anos_filtro, reverse=True)
+        ordem_anos = todos
+
+    elif drop1 == 'Cronológico':
+        ordem = ordem
+        ordem_anos = todos
+
+    fig1 = px.bar(x=ordem_anos, y=ordem)
+
+    fig1.update_layout(
+        title='Vendas Globais por Ano',
+        xaxis={'title': 'Anos'},
+        yaxis={'title': 'Vendas'},
+        height=500,
+        paper_bgcolor='rgba(233,233,233,0)',
+        plot_bgcolor='rgba(20,20,20,0.3)',
+        font_color='white',
+        font_size=17
+    )
+
+    fig1.update_traces(
+        hovertemplate='Vendas: %{y} <br> Ano: %{x}'
+    )
+
+    return fig1
 
 
 @app.callback(
     Output('graphs', 'style'),
     [Input('btn', 'n_clicks')]
 )
-
 def start_button(n_clicks):
     if n_clicks >= 2:
         return depois_style
     else:
         return antes_style
 
+
 @app.callback(
     Output('btn', 'style'),
     [Input('btn', 'n_clicks')]
 )
-
 def sumir_botao(n_clicks):
     if n_clicks == 1:
         return button_style_durante
@@ -616,38 +678,37 @@ def sumir_botao(n_clicks):
     else:
         return button_style_antes
 
+
 @app.callback(
     Output('titulo', 'style'),
     [Input('btn', 'n_clicks')]
 )
-
 def mudar_fonte(n_clicks):
     if n_clicks >= 2:
         return fonte_depois
     else:
         return fonte_antes
 
+
 @app.callback(
     Output('video', 'style'),
     [Input('btn', 'n_clicks')]
 )
-
 def mudar_video(n_clicks):
     if n_clicks == 1:
         return video_durante
-    
+
     elif n_clicks > 1:
         return video_depois
-        
+
     else:
         return video_antes
+
 
 @app.callback(
     Output('fotos', 'style'),
     [Input('btn', 'n_clicks')],
 )
-
-
 def mudar_fotos(n_clicks):
     if n_clicks == 1:
         return grupo_durante
