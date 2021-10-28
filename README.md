@@ -1,7 +1,9 @@
 # APC
 Repositório para o projeto da disciplina de APC da UnB. 
 
-Obs: Baixar o GIF do wallpaper no link: https://drive.google.com/file/d/1hHZE65-Oe5HoukjTjAJmztqNfekq0X6l/view?usp=sharing, trocar o nome para 'background.png', e colocar na pasta "assets", pois o GitHub é fresco e não aguenta 25mb+, até o aprender3 aguenta 100mb cara.
+Obs1: Baixar o GIF do wallpaper no link: https://drive.google.com/file/d/1hHZE65-Oe5HoukjTjAJmztqNfekq0X6l/view?usp=sharing, trocar o nome para 'background.png', e colocar na pasta "assets", pois o GitHub é fresco e não aguenta 25mb+, até o aprender3 aguenta 100mb cara.
+
+Obs2: Nesse projeto, não focamos na responsividade do layout, então, em alguns monitores, pode haver erro nas proporções. Para corrigir, bastar ir alterandos os valores "height" das fotos dos players e dos gráficos do plotly.
 
 O objetivo do projeto é analisar uma base de dados sobre vendas de jogos, e analisar as tendências desse mercado, utilizando as bibliotecas Dash e Plotly, e a linguagem Python.
 
